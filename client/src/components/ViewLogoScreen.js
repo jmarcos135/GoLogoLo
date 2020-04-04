@@ -35,9 +35,11 @@ class ViewLogoScreen extends Component {
     render() {
         return (
             <Query pollInterval={500} query={GET_LOGO} variables={{ logoId: this.props.match.params.id }}>
-                {({ loading, error, data }) => {
+                {({ loading, error, data, refetch }) => {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;
+                    
+                    refetch();
 
                     return (
                         <div className="container">
@@ -48,8 +50,8 @@ class ViewLogoScreen extends Component {
                                         View Logo
                                     </h3>
                                 </div>
-                                <div className="panel-body">
-                                    <dl>
+                                <div className="panel-body row">
+                                    <dl className="col-md-4">
                                         <dt>Text:</dt>
                                         <dd>{data.logo.text}</dd>
                                         <dt>Color:</dt>
@@ -70,7 +72,7 @@ class ViewLogoScreen extends Component {
                                         <dd>{data.logo.margins}</dd>
                                         <dt>Last Updated:</dt>
                                         <dd>{data.logo.lastUpdate}</dd>
-                                    </dl>
+
                                     <Mutation mutation={DELETE_LOGO} key={data.logo._id} onCompleted={() => this.props.history.push('/')}>
                                         {(removeLogo, { loading, error }) => (
                                             <div>
@@ -87,6 +89,15 @@ class ViewLogoScreen extends Component {
                                             </div>
                                         )}
                                     </Mutation>
+                                    </dl>
+
+                                    <div className="col-md-8">
+                                        <div style={{color: data.logo.color, fontSize: data.logo.fontSize+"pt", backgroundColor: data.logo.backgroundColor,
+                                                    borderColor: data.logo.borderColor, borderRadius: data.logo.borderRadius+"px", borderWidth: data.logo.borderWidth+"px",
+                                                    padding: data.logo.padding+"px", margin: data.logo.margins+"px", borderStyle: "solid", position: "absolute" }}>
+                                            <pre style={{color: data.logo.color}}>{data.logo.text}</pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
