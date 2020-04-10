@@ -24,23 +24,31 @@ class HomeScreen extends Component {
                     if (error) return `Error! ${error.message}`;
 
                     return (
-                        <div className="container row">
-                            <div className="col s4">
-                                <h3>Recent Work</h3>
-                                {data.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
-                                    <div key={index} className='home_logo_link'
-                                        style={{ cursor: "pointer" }}>
-                                        <Link to={`/view/${logo._id}`}>{logo.text}</Link>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-4">
+                                    <div className="card">
+                                        <div className="card-header">
+                                            Recent Work
+                                        </div>
+                                        <ul className="list-group list-group-flush">
+                                            {data.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
+                                                <li key={index} className='home_logo_link list-group-item'>
+                                                    <Link to={`/view/${logo._id}`}>{logo.text}</Link>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
-                                ))}
-                            </div>
-                            <div className="col s8">
-                                <div id="home_banner_container">
-                                    @todo<br />
-                                    List Maker
                                 </div>
-                                <div>
-                                    <Link id="add_logo_button" to="/create">Add Logo</Link>
+
+                                <div className="col-md-8">
+                                    <div className="card card-default bg-dark" id="home_banner_container">
+                                        GoLogoLo<br />
+                                        Logo Maker
+                                    </div>
+                                    <div>
+                                        <Link className="btn btn-success" id="add_logo_button" to="/create">Add Logo</Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
