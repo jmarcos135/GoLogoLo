@@ -53,6 +53,12 @@ class CreateLogoScreen extends Component {
         this.logo = null;
     }
 
+
+    isWithinRange = (e) => {
+        let val=parseInt(e.target.value); let min=parseInt(e.target.min) ;let max=parseInt(e.target.max); 
+        return (val>=min && val<=max);
+    }
+
     render() {
         let text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margins;
         return (
@@ -86,6 +92,7 @@ class CreateLogoScreen extends Component {
                                                                         padding: parseInt(padding.value),
                                                                         margins: parseInt(margins.value)
                                                                         } });
+                                                    /*
                                                     text.value = "";
                                                     color.value = "";
                                                     fontSize.value = "";
@@ -95,10 +102,11 @@ class CreateLogoScreen extends Component {
                                                     borderWidth.value = "";
                                                     padding.value = "";
                                                     margins.value = "";
+                                                    */
                                                 }}>
                                                     <div className="form-group">
                                                         <label htmlFor="text">Text:</label>
-                                                        <input type="text" className="form-control" name="text" onChange={(e) => this.setState({logoText: e.target.value})} ref={node => {
+                                                        <input type="text" required={true} className="form-control" name="text" onChange={(e) => this.setState({logoText: e.target.value})} ref={node => {
                                                             text = node;
                                                         }} placeholder="Text" defaultValue={this.state.logoText}/>
                                                     </div>
@@ -110,7 +118,7 @@ class CreateLogoScreen extends Component {
                                                     </div>
                                                     <div className="form-group">
                                                         <label htmlFor="fontSize">Font Size:</label>
-                                                        <input type="number"  className="form-control" name="fontSize" onChange={(e) => this.setState({fontSize: e.target.value})} ref={node => {
+                                                        <input type="number"  min="2" max="144" className="form-control" name="fontSize" onChange={(e) => {if (this.isWithinRange(e)) this.setState({fontSize: e.target.value});}} ref={node => {
                                                             fontSize = node;
                                                         }} placeholder="Font Size" defaultValue={this.state.fontSize}/>
                                                     </div>
@@ -128,25 +136,25 @@ class CreateLogoScreen extends Component {
                                                     </div>
                                                     <div className="form-group">
                                                         <label htmlFor="borderRadius">Border Radius:</label>
-                                                        <input type="number" className="form-control" name="borderRadius" onChange={(e) => this.setState({borderRadius: e.target.value})} ref={node => {
+                                                        <input type="number" min="2" max="144" className="form-control" name="borderRadius" onChange={(e) =>{ if (this.isWithinRange(e)) this.setState({borderRadius: e.target.value})}} ref={node => {
                                                             borderRadius = node;
                                                         }} placeholder="Border Radius" defaultValue={this.state.borderRadius} />
                                                     </div>
                                                     <div className="form-group">
                                                         <label htmlFor="borderWidth">Border Width:</label>
-                                                        <input type="number" className="form-control" name="borderWidth" onChange={(e) => this.setState({borderWidth: e.target.value})} ref={node => {
+                                                        <input type="number" min="2" max="144" className="form-control" name="borderWidth" onChange={(e) => {if (this.isWithinRange(e)) this.setState({borderWidth: e.target.value})}} ref={node => {
                                                             borderWidth = node;
                                                         }} placeholder="Border Width" defaultValue={this.state.borderWidth}/>
                                                     </div>
                                                     <div className="form-group">
                                                         <label htmlFor="padding">Padding:</label>
-                                                        <input type="number" className="form-control" name="padding" onChange={(e) => this.setState({padding: e.target.value})} ref={node => {
+                                                        <input type="number" min="2" max="144" className="form-control" name="padding" onChange={(e) => {if (this.isWithinRange(e)) this.setState({padding: e.target.value})}} ref={node => {
                                                             padding = node;
                                                         }} placeholder="Padding" defaultValue={this.state.padding}/>
                                                     </div>
                                                     <div className="form-group">
                                                         <label htmlFor="margins">Margins:</label>
-                                                        <input type="number" className="form-control" name="margins" onChange={(e) => this.setState({margins: e.target.value})} ref={node => {
+                                                        <input type="number" min="2" max="144" className="form-control" name="margins" onChange={(e) => {if (this.isWithinRange(e)) this.setState({margins: e.target.value})}} ref={node => {
                                                             margins = node;
                                                         }} placeholder="Margins" defaultValue={this.state.margins}/>
                                                     </div>
