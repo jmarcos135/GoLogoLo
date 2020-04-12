@@ -39,6 +39,8 @@ class ViewLogoScreen extends Component {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;
                     
+                    console.log("ViewLogoScreen rendering");
+                    
                     refetch();
 
                     return (

@@ -92,17 +92,6 @@ class CreateLogoScreen extends Component {
                                                                         padding: parseInt(padding.value),
                                                                         margins: parseInt(margins.value)
                                                                         } });
-                                                    /*
-                                                    text.value = "";
-                                                    color.value = "";
-                                                    fontSize.value = "";
-                                                    backgroundColor.value = "";
-                                                    borderColor.value = "";
-                                                    borderRadius.value = "";
-                                                    borderWidth.value = "";
-                                                    padding.value = "";
-                                                    margins.value = "";
-                                                    */
                                                 }}>
                                                     <div className="form-group">
                                                         <label htmlFor="text">Text:</label>

@@ -68,6 +68,7 @@ class EditLogoScreen extends Component {
         };
 
         this.logo = null;
+        console.log("EditLogoScreen constructor");
     }
 
     componentDidMount = () => {
@@ -94,13 +95,13 @@ class EditLogoScreen extends Component {
     render() {
         let text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margins;
         return (
-            <Query query={GET_LOGO} variables={{ logoId: this.props.match.params.id }}>
-                {({ loading, error, data }) => {
+            <Query  query={GET_LOGO} variables={{ logoId: this.props.match.params.id }} >
+                {({ loading, error, data}) => {
                     if (loading) return 'Loading...';
-                    if (error) return `Error! ${error.message}`;
+                    if (error) {console.log("ERROR! " + error.message); return `Error! ${error.message}`};
 
                     this.logo = data.logo;
-                    console.log("LOGO: " + this.logo);
+                    console.log("EditLogoScreen rendering");
 
                     return (
                         <Mutation mutation={UPDATE_LOGO} key={data.logo._id} onCompleted={() => this.props.history.push(`/`)}>
@@ -136,17 +137,6 @@ class EditLogoScreen extends Component {
                                                                                             padding: parseInt(padding.value),
                                                                                             margins: parseInt(margins.value),
                                                                                         } });
-                                                                /*
-                                                                text.value = "";
-                                                                color.value = "";
-                                                                fontSize.value = "";
-                                                                backgroundColor.value = "";
-                                                                borderColor.value = "";
-                                                                borderRadius.value = "";
-                                                                borderWidth.value = "";
-                                                                padding.value = "";
-                                                                margins.value = "";
-                                                                */
                                                             }}>
                                                                 <div className="form-group">
                                                                     <label htmlFor="text">Text:</label>
