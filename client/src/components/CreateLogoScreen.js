@@ -157,7 +157,7 @@ class CreateLogoScreen extends Component {
                                 </div>
                             </div>
 
-                            <div className="col-md-8">
+                            <div className="col-md-8" style={{overflow: "auto"}}>
                                 <div style={{color: this.state.color, fontSize: this.state.fontSize+"pt", backgroundColor: this.state.backgroundColor,
                                             borderColor: this.state.borderColor, borderRadius: this.state.borderRadius+"px", borderWidth: this.state.borderWidth+"px",
                                             padding: this.state.padding+"px", margin: this.state.margins+"px", borderStyle: "solid", position: "absolute" }}>

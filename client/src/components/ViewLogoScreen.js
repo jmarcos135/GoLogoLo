@@ -80,7 +80,7 @@ class ViewLogoScreen extends Component {
                                                         <dt>Margins:</dt>
                                                         <dd>{data.logo.margins}</dd>
                                                         <dt>Last Updated:</dt>
-                                                        <dd>{data.logo.lastUpdate}</dd>
+                                                        <dd>{new Date(data.logo.lastUpdate).toString()}</dd>
 
                                                         <Mutation mutation={DELETE_LOGO} key={data.logo._id} onCompleted={() => this.props.history.push('/')}>
                                                             {(removeLogo, { loading, error }) => (
@@ -105,10 +105,10 @@ class ViewLogoScreen extends Component {
                                     </div>
                                 </div>
 
-                                <div className="col-md-8">
+                                <div className="col-md-8" style={{overflow: "auto"}}>
                                     <div style={{color: data.logo.color, fontSize: data.logo.fontSize+"pt", backgroundColor: data.logo.backgroundColor,
                                                 borderColor: data.logo.borderColor, borderRadius: data.logo.borderRadius+"px", borderWidth: data.logo.borderWidth+"px",
-                                                padding: data.logo.padding+"px", margin: data.logo.margins+"px", borderStyle: "solid", position: "absolute" }}>
+                                                padding: data.logo.padding+"px", margin: data.logo.margins+"px", borderStyle: "solid", position: "absolute"}}>
                                         <pre style={{color: data.logo.color}}>{data.logo.text}</pre>
                                     </div>
                                 </div>
