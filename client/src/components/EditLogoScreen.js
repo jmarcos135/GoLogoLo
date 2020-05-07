@@ -106,20 +106,31 @@ class EditLogoScreen extends Component {
                     return (
                         <Mutation mutation={UPDATE_LOGO} key={data.logo._id} onCompleted={() => this.props.history.push(`/`)}>
                             {(updateLogo, { loading, error }) => (
-                                <div className="container">
-                                    <nav class="navbar navbar-dark bg-dark">
-                                        <Link to="/"><a class="navbar-brand" href="#">Home</a></Link>
+                                <div className="">
+                                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                                        <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                                        <div class="collapse navbar-collapse" id="navbarText">
+                                            <ul class="navbar-nav mr-auto">
+                                            </ul>
+                                            <span class="navbar-text">
+
+                                                <ul class="navbar-nav mr-auto">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" href="#">Logout</a>
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        </div>
                                     </nav>
 
-
                                     <div className="row">
-                                        <div className="col-md-4">
-                                            <div className="card card-default">
+                                        <div className="col-md-3">
+                                            <div className="card card-default" >
                                                 <div className="card-body">
                                                     <div className="card-heading">
-                                                        <h3 className="card-title">
+                                                        <h5 className="card-title">
                                                             Edit Logo
-                                                        </h3>
+                                                        </h5>
                                                     </div>
                                                     <div className="card card-default bg-dark" style={{color: "#ffffff"}}>                                            
                                                         <div className="card-body">
@@ -139,19 +150,19 @@ class EditLogoScreen extends Component {
                                                                                         } });
                                                             }}>
                                                                 <div className="form-group">
-                                                                    <label htmlFor="text">Text:</label>
+                                                                    <label htmlFor="text">Name:</label>
                                                                     <input type="text" required={true} className="form-control" name="text" onChange={(e) => this.setState({text: e.target.value})} ref={node => {
                                                                         text = node;
                                                                     }} placeholder="Text" defaultValue={data.logo.text} />
                                                                 </div>
                                                                 <div className="form-group">
-                                                                    <label htmlFor="color">Color:</label>
-                                                                    <input type="color" required={true} className="form-control" name="color" onChange={(e) => this.setState({color: e.target.value})} ref={node => {
-                                                                        color = node;
-                                                                    }} placeholder="Color" defaultValue={data.logo.color} />
+                                                                    <label htmlFor="fontSize">Width:</label>
+                                                                    <input type="number" required={true} min="2" max="144" className="form-control" name="fontSize" onChange={(e)=>{if (this.isWithinRange(e)) this.setState({fontSize: e.target.value})}} ref={node => {
+                                                                        fontSize = node;
+                                                                    }} placeholder="Font Size" defaultValue={data.logo.fontSize} />
                                                                 </div>
                                                                 <div className="form-group">
-                                                                    <label htmlFor="fontSize">Font Size:</label>
+                                                                    <label htmlFor="fontSize">Height:</label>
                                                                     <input type="number" required={true} min="2" max="144" className="form-control" name="fontSize" onChange={(e)=>{if (this.isWithinRange(e)) this.setState({fontSize: e.target.value})}} ref={node => {
                                                                         fontSize = node;
                                                                     }} placeholder="Font Size" defaultValue={data.logo.fontSize} />
@@ -174,25 +185,32 @@ class EditLogoScreen extends Component {
                                                                         borderRadius = node;
                                                                     }} placeholder="Border Radius" defaultValue={data.logo.borderRadius} />
                                                                 </div>
+
+                                                                
                                                                 <div className="form-group">
                                                                     <label htmlFor="borderWidth">Border Width:</label>
                                                                     <input type="number" required={true} min="0" max="144" className="form-control" name="borderWidth" onChange={(e)=>{if (this.isWithinRange(e)) this.setState({borderWidth: e.target.value})}} ref={node => {
                                                                         borderWidth= node;
                                                                     }} placeholder="Border Width" defaultValue={data.logo.borderWidth} />
                                                                 </div>
-                                                                <div className="form-group">
-                                                                    <label htmlFor="padding">Padding:</label>
-                                                                    <input type="number" required={true} min="0" max="144" className="form-control" name="padding" onChange={(e)=>{if (this.isWithinRange(e)) this.setState({padding: e.target.value})}} ref={node => {
-                                                                        padding = node;
-                                                                    }} placeholder="Padding" defaultValue={data.logo.padding} />
+
+                                                                <div className="container">
+                                                                    <div className="row">
+                                                                        <div className="col-md-6 d-flex justify-content-center">
+                                                                            <button type="submit" className="btn btn-success">Insert Text</button>
+                                                                        </div>
+                                                                        <div className="col-md-6 d-flex justify-content-center">
+                                                                            <button type="submit" className="btn btn-success" >Insert Image</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <br/>
+                                                                    <div className="row">
+                                                                        <div className="col-md-12 d-flex justify-content-center">
+                                                                            <button type="submit" className="btn btn-success">Submit</button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="form-group">
-                                                                    <label htmlFor="margins">Margins:</label>
-                                                                    <input type="number" required={true} min="0" max="144" className="form-control" name="margins" onChange={(e)=>{if (this.isWithinRange(e)) this.setState({margins: e.target.value})}} ref={node => {
-                                                                        margins = node;
-                                                                    }} placeholder="margins" defaultValue={data.logo.margins} />
-                                                                </div>
-                                                                <button type="submit" className="btn btn-success">Submit</button>
                                                             </form>
                                                             {loading && <p>Loading...</p>}
                                                             {error && <p>Error :( Please try again</p>}
@@ -203,7 +221,7 @@ class EditLogoScreen extends Component {
                                         </div>
 
 
-                                        <div className="col-md-8" style={{overflow: "auto"}}>
+                                        <div className="col-md-9" style={{overflow: "auto"}}>
                                             <div style={{color: this.state.color, fontSize: this.state.fontSize+"pt", backgroundColor: this.state.backgroundColor,
                                                         borderColor: this.state.borderColor, borderRadius: this.state.borderRadius+"px", borderWidth: this.state.borderWidth+"px",
                                                         padding: this.state.padding+"px", margin: this.state.margins+"px", borderStyle: "solid", position: "absolute" }}>

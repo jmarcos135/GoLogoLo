@@ -26,32 +26,57 @@ class HomeScreen extends Component {
                     refetch();
 
                     return (
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            Recent Work
-                                        </div>
-                                        <ul className="list-group list-group-flush">
-                                            {data.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
+                        <div className="">
+                            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+                                <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                                <div class="collapse navbar-collapse" id="navbarText">
+                                    <ul class="navbar-nav mr-auto">
+                                    </ul>
+                                    <span class="navbar-text">
+
+                                        <ul class="navbar-nav mr-auto">
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Logout</a>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </nav>
+
+                            <div className="container" style={{backgroundColor: "white", height: "100vh", minHeight: "100vh"}}>
+                                <br />
+                                <div className="row" >
+                                    <div className="col-md-12">
+                                        <nav class="navbar navbar-light bg-light">
+                                            <div class="d-flex flex-grow-1 mr-auto">
+                                                <h4>Recent Logos</h4>
+                                            </div>
+                                            <ul class="navbar-nav ml-auto flex-nowrap">
+                                                <li class="nav-item">
+                                                    <Link className="btn btn-success" id="add_logo_button" to="/create"><i class="fas fa-cloud"></i>New Logo</Link>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+
+                                <div className="row" >
+                                    <div className="col-md-12">
+                                        <ul className="list-group list-group-flush" style={{minHeight: "60vh", maxHeight: "75vh", overflow: "scroll"}}>
+                                        {data.logos.length==0 ? <h6><br></br>You currently have no logos</h6> : 
+                                            data.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
                                                 <li key={index} className='home_logo_link list-group-item'>
                                                     <Link to={`/view/${logo._id}`}>{logo.text}</Link>
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
+
                                 </div>
 
-                                <div className="col-md-8">
-                                    <div className="card card-default bg-dark" id="home_banner_container">
-                                        GoLogoLo<br />
-                                        Logo Maker
-                                    </div>
-                                    <div>
-                                        <Link className="btn btn-success" id="add_logo_button" to="/create">Add Logo</Link>
-                                    </div>
-                                </div>
+                                <br/>
+
                             </div>
                         </div>
                     );

@@ -44,22 +44,33 @@ class ViewLogoScreen extends Component {
                     refetch();
 
                     return (
-                        <div className="container">
-                            <nav class="navbar navbar-dark bg-dark">
-                                <Link to="/"><a class="navbar-brand" href="#">Home</a></Link>
-                            </nav>
+                        <div className="">
+                            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                                <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                                <div class="collapse navbar-collapse" id="navbarText">
+                                    <ul class="navbar-nav mr-auto">
+                                    </ul>
+                                    <span class="navbar-text">
 
-                            <div className="row">
-                                <div className="col-md-4"> 
-                                    <div className="card card-default ">
+                                        <ul class="navbar-nav mr-auto">
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Logout</a>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </nav>
+                            <div className="row" >
+                                <div className="col-md-3" > 
+                                    <div className= "card card-default bg-light">
                                         <div className="card-body">
                                             <div className="card-heading">
                                                 <h3 className="card-title">
                                                     View Logo
                                                 </h3>
                                             </div>
-                                            <div className="card card-default bg-dark" >
-                                                <div className="card-body">
+                                            <div className="card card-default bg-dark">
+                                                <div className="card-body" >
                                                     <dl style={{color: "#ffffff"}}>
                                                         <dt>Text:</dt>
                                                         <dd>{data.logo.text}</dd>
@@ -104,8 +115,8 @@ class ViewLogoScreen extends Component {
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="col-md-8" style={{overflow: "auto"}}>
+                                
+                                <div className="col-md-9" style={{overflow: "auto"}}>
                                     <div style={{color: data.logo.color, fontSize: data.logo.fontSize+"pt", backgroundColor: data.logo.backgroundColor,
                                                 borderColor: data.logo.borderColor, borderRadius: data.logo.borderRadius+"px", borderWidth: data.logo.borderWidth+"px",
                                                 padding: data.logo.padding+"px", margin: data.logo.margins+"px", borderStyle: "solid", position: "absolute"}}>
@@ -121,5 +132,8 @@ class ViewLogoScreen extends Component {
         );
     }
 }
+
+/*
+*/
 
 export default ViewLogoScreen;
