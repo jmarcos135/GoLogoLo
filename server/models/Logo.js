@@ -14,4 +14,7 @@ var LogoSchema = new mongoose.Schema({
   lastUpdate: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Logo', LogoSchema);
+module.exports = {
+  LogoSchema: LogoSchema,
+  Logo: mongoose.model('Logo', LogoSchema)
+}
