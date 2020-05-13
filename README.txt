@@ -1,98 +1,159 @@
-EXAMPLE QUERIES: 
-** NOTE: replace SOME_LOGO_ID with a valid logo id.
+TESTING QUERIES: 
 
+Queries:
+	users
+	user(id)
+Mutations:
+	addUser(...)
+	addLogo(...)
+	updateLogo(...)
+	removeLogo(...)
+	removeAllUsers
+	
+
+
+// query all users and display user data
+{
+  users {
+    _id
+  	email
+    password
+    logos{
+      _id
+      name
+      textBoxes{
+        _id
+      }
+      imageBoxes{
+        _id
+      }
+    }
+  }
+}
+=============================
+//query specific user
+{
+  user(id:"5eb5cad4b21273104270b719") {
+    _id
+    email
+    password
+    logos{
+      _id
+    }
+  }
+}
+
+{
+  user(id:"5ebc3e37ffbda00ce3d1d399") {
+    _id
+    email
+    password
+    logos{
+      _id
+      name
+      textBoxes{
+        _id
+        text
+        fontSize
+        color
+        width
+        height
+      }
+      imageBoxes{
+        _id
+        url
+        width
+        height
+      }
+    }
+  }
+}
+
+
+===========================
+// update logo
 mutation {
-  addLogo(
-    text: "test Logo",
-    color: "#a8b5ff",
-    fontSize: 42,
-    backgroundColor: "#cc91ca",
-    borderColor: "#441114",
-    borderRadius: 32,
-    borderWidth: 21,
-    padding: 9,
-    margins: 50
+  updateLogo(
+	userId:"5eb5cad4b21273104270b719",
+	logoId:"5eb602a2f42c601722ec59e3",
+	name: "qwer",
+	width: 10,
+	height: 10,
+	backgroundColor: "qwer",
+	borderColor: "qwer",
+	borderRadius: 12,
+	borderWidth: 11,
+	textBoxes: [],
+	imageBoxes: [],
   ){
     _id
   }
+
 }
-
-=============================
-
-{
-  logo(id: "SOME_LOGO_ID") {
-    _id
-    text
-    color
-    fontSize
-    backgroundColor
-    borderColor
-    borderRadius
-    borderWidth
-    padding
-    margins
-    lastUpdate
-  }
-}
-
-============================
-
-{
-  logos {
-    _id
-    text
-    color
-    fontSize
-    backgroundColor
-    borderColor
-    borderRadius
-    borderWidth
-    padding
-    margins
-    lastUpdate
-  }
-}
-
-============================
 
 mutation {
   updateLogo(
-    id: "SOME_LOGO_ID",
-    text: "newText",
-    color: "ff33dd",
-    fontSize: 20,
-    backgroundColor:"ffffff",
-    borderColor:"ffffff",
-    borderRadius:15,
-    borderWidth: 20,
-    padding: 25,
-    margins: 20
+	userId:"5ebc3e37ffbda00ce3d1d399",
+	logoId:"5ebc3e78ffbda00ce3d1d39c",
+	name: "second logo",
+	width: 10,
+	height: 10,
+	backgroundColor: "qwer",
+	borderColor: "qwer",
+	borderRadius: 12,
+	borderWidth: 11,
+	textBoxes: [{text:"first text", fontSize: 22, color:"#ffffff", width:100, height:100}],
+	imageBoxes: [{url:"firstimageurl", width:100, height:100}],
   ){
-   _id
-   text
-   color
-   fontSize
-   backgroundColor
-   borderColor
-   borderRadius
-   borderWidth
-   padding
-   margins
-   lastUpdate
+    _id
   }
+
 }
 
-============================
-
+==========================
+// add logo to specific user
+mutation {
+  addLogo(
+	userId:"5eb5cad4b21273104270b719",
+	name: "qwer",
+	width: 10,
+	height: 10,
+	backgroundColor: "qwer",
+	borderColor: "qwer",
+	borderRadius: 12,
+	borderWidth: 11,
+	textBoxes: [],
+	imageBoxes: [],
+  ){
+    _id
+  }
+}
+=========================
+// remove specific user logo
 mutation {
   removeLogo(
-    id:"SOME_LOGO_ID"
+    userId:"5eb5cad4b21273104270b719",
+    logoId:"5eb602a2f42c601722ec59e3"
   ){
-    _id,
-    text
+    _id
   }
 }
-
-
-
+=========================
+// add user
+mutation {
+  addUser(
+    email: "qwer",
+  	password: "qwer",
+  ){
+    _id
+  }
+}
+=========================
+// remove all users 
+mutation {
+  removeAllUsers
+  {
+    _id
+  }
+}
 

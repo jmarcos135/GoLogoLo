@@ -2,6 +2,7 @@ var GraphQLSchema = require('graphql').GraphQLSchema;
 var GraphQLObjectType = require('graphql').GraphQLObjectType;
 var GraphQLList = require('graphql').GraphQLList;
 var GraphQLObjectType = require('graphql').GraphQLObjectType;
+var GraphQLInputObjectType = require('graphql').GraphQLInputObjectType;
 var GraphQLNonNull = require('graphql').GraphQLNonNull;
 var GraphQLID = require('graphql').GraphQLID;
 var GraphQLString = require('graphql').GraphQLString;
@@ -11,8 +12,8 @@ var LogoModel = require('../models/Logo.js').Logo;
 var UserModel = require('../models/User');
 
 
-var logoType = new GraphQLObjectType({
-    name: 'logo',
+var textBoxType = new GraphQLObjectType({
+    name: 'textBox',
     fields: function () {
         return {
             _id: {
@@ -21,11 +22,99 @@ var logoType = new GraphQLObjectType({
             text: {
                 type: GraphQLString
             },
+            fontSize: {
+                type: GraphQLInt 
+            },
             color: {
                 type: GraphQLString
             },
-            fontSize: {
-                type: GraphQLInt
+            width: {
+                type: GraphQLInt 
+            },
+            height: {
+                type: GraphQLInt 
+            }
+        }
+    }
+});
+
+var textBoxInput= new GraphQLInputObjectType({
+    name: 'textBoxInput',
+    fields: {
+        _id: {
+            type: GraphQLString
+        },
+        text: {
+            type: GraphQLString
+        },
+        fontSize: {
+            type: GraphQLInt 
+        },
+        color: {
+            type: GraphQLString
+        },
+        width: {
+            type: GraphQLInt 
+        },
+        height: {
+            type: GraphQLInt 
+        }
+    }
+  });
+
+var imageBoxType = new GraphQLObjectType({
+    name: 'imageBox',
+    fields: function () {
+        return {
+            _id: {
+                type: GraphQLString
+            },
+            url: {
+                type: GraphQLString
+            },
+            width: {
+                type: GraphQLInt 
+            },
+            height: {
+                type: GraphQLInt 
+            }
+        }
+    }
+});
+
+var imageBoxInput= new GraphQLInputObjectType({
+    name: 'imageBoxInput',
+    fields: {
+        _id: {
+            type: GraphQLString
+        },
+        url: {
+            type: GraphQLString
+        },
+        width: {
+            type: GraphQLInt 
+        },
+        height: {
+            type: GraphQLInt 
+        }
+    }
+  });
+
+var logoType = new GraphQLObjectType({
+    name: 'logo',
+    fields: function () {
+        return {
+            _id: {
+                type: GraphQLString
+            },
+            name: {
+                type: GraphQLString
+            },
+            width: {
+                type: GraphQLInt 
+            },
+            height: {
+                type: GraphQLInt 
             },
             backgroundColor: {
                 type: GraphQLString
@@ -39,11 +128,11 @@ var logoType = new GraphQLObjectType({
             borderWidth: {
                 type: GraphQLInt
             },
-            padding: {
-                type: GraphQLInt
+            textBoxes: {
+                type : new GraphQLList(textBoxType)
             },
-            margins: {
-                type: GraphQLInt
+            imageBoxes: {
+                type : new GraphQLList(imageBoxType)
             },
             lastUpdate: {
                 type: GraphQLDate
@@ -162,13 +251,13 @@ var mutation = new GraphQLObjectType({
                         name: "_id",
                         type: GraphQLString
                     },
-                    text: {
+                    name: {
                         type: new GraphQLNonNull(GraphQLString)
                     },
-                    color: {
-                        type: new GraphQLNonNull(GraphQLString)
+                    width: {
+                        type: new GraphQLNonNull(GraphQLInt)
                     },
-                    fontSize: {
+                    height: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
                     backgroundColor: {
@@ -183,18 +272,18 @@ var mutation = new GraphQLObjectType({
                     borderWidth: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    padding: {
-                        type: new GraphQLNonNull(GraphQLInt)
+                    textBoxes: {
+                        type: new GraphQLList(textBoxInput)
                     },
-                    margins: {
-                        type: new GraphQLNonNull(GraphQLInt)
+                    imageBoxes: {
+                        type: new GraphQLList(imageBoxInput)
                     }
                 },
                 resolve: function (root, params) {
                     const user = UserModel.findOne({_id: params.userId}, function (err, user){
                         if (err) console.log(err);
-                        user.logos.push({text: params.text, color: params.color, fontSize: params.fontSize, backgroundColor: params.backgroundColor, borderColor: params.borderColor,
-                                            borderRadius: params.borderRadius, borderWidth: params.borderWidth, padding: params.padding, margins: params.margins });
+                        user.logos.push({name: params.name, width: params.width, height: params.height, backgroundColor: params.backgroundColor, borderColor: params.borderColor,
+                                            borderRadius: params.borderRadius, borderWidth: params.borderWidth, textBoxes: params.textBoxes, imageBoxes: params.imageBoxes});
                         user.save(function(err, user) {
                             if(err) return next(err);
                             //res.send(user);
@@ -217,13 +306,13 @@ var mutation = new GraphQLObjectType({
                         name: '_id',
                         type: new GraphQLNonNull(GraphQLString)
                     },
-                    text: {
+                    name: {
                         type: new GraphQLNonNull(GraphQLString)
                     },
-                    color: {
-                        type: new GraphQLNonNull(GraphQLString)
+                    width: {
+                        type: new GraphQLNonNull(GraphQLInt)
                     },
-                    fontSize: {
+                    height: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
                     backgroundColor: {
@@ -238,11 +327,11 @@ var mutation = new GraphQLObjectType({
                     borderWidth: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    padding: {
-                        type: new GraphQLNonNull(GraphQLInt)
+                    textBoxes: {
+                        type: new GraphQLList(textBoxInput)
                     },
-                    margins: {
-                        type: new GraphQLNonNull(GraphQLInt)
+                    imageBoxes: {
+                        type: new GraphQLList(imageBoxInput)
                     }
                 },
                 resolve: function (root, params) {
@@ -250,15 +339,15 @@ var mutation = new GraphQLObjectType({
                         {_id: params.userId, "logos._id": params.logoId},
                         {
                             "$set": {
-                                "logos.$.text": params.text,
-                                "logos.$.color": params.color, 
-                                "logos.$.fontSize": params.fontSize, 
+                                "logos.$.name": params.name,
+                                "logos.$.width": params.width, 
+                                "logos.$.height": params.height, 
                                 "logos.$.backgroundColor": params.backgroundColor, 
                                 "logos.$.borderColor": params.borderColor,
                                 "logos.$.borderRadius": params.borderRadius,
                                 "logos.$.borderWidth": params.borderWidth,
-                                "logos.$.padding": params.padding,
-                                "logos.$.margins": params.margins,
+                                "logos.$.textBoxes": params.textBoxes,
+                                "logos.$.imageBoxes": params.imageBoxes,
                                 "logos.$.lastUpdate": new Date() 
                             }
                         });

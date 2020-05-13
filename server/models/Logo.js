@@ -1,16 +1,32 @@
 var mongoose = require('mongoose');
 
-var LogoSchema = new mongoose.Schema({
+TextBoxSchema = new mongoose.Schema({
   id: String,
   text: String,
+  fontSize: Number,
   color: String,
-  fontSize: { type: Number, min: 2, max: 144 },
+  width: Number,
+  height: Number
+});
+
+ImageBoxSchema = new mongoose.Schema({
+  id: String,
+  url: String,
+  width: Number,
+  height: Number
+});
+
+var LogoSchema = new mongoose.Schema({
+  id: String,
+  name: String,
+  width: Number,
+  height: Number,
   backgroundColor: String,
   borderColor: String,
   borderRadius: { type: Number, min: 0, max: 144 },
   borderWidth: { type: Number, min: 0, max: 144 },
-  padding: { type: Number, min: 0, max: 144 },
-  margins: { type: Number, min: 0, max: 144 },
+  textBoxes: [TextBoxSchema],
+  imageBoxes: [ImageBoxSchema],
   lastUpdate: { type: Date, default: Date.now },
 });
 
