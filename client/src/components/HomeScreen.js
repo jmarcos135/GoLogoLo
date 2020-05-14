@@ -4,14 +4,20 @@ import '../App.css';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
+
 const GET_LOGOS = gql`
-  {
-    logos {
+{
+    user(id:"5ebc3e37ffbda00ce3d1d399") {
       _id
-      text
-      lastUpdate
+      email
+      password
+      logos{
+        _id
+        name
+        lastUpdate
+      }
     }
-  }
+}
 `;
 
 class HomeScreen extends Component {
@@ -64,10 +70,10 @@ class HomeScreen extends Component {
                                 <div className="row" >
                                     <div className="col-md-12">
                                         <ul className="list-group list-group-flush" style={{minHeight: "60vh", maxHeight: "75vh", overflow: "scroll"}}>
-                                        {data.logos.length==0 ? <h6><br></br>You currently have no logos</h6> : 
-                                            data.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
+                                        {data.user.logos.length==0 ? <h6><br></br>You currently have no logos</h6> : 
+                                            data.user.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
                                                 <li key={index} className='home_logo_link list-group-item'>
-                                                    <Link to={`/view/${logo._id}`}>{logo.text}</Link>
+                                                    <Link to={`/view/${logo._id}`}>{logo.name}</Link>
                                                 </li>
                                             ))}
                                         </ul>

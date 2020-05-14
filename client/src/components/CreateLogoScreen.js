@@ -2,28 +2,32 @@ import React, { Component } from 'react';
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 import { Link } from 'react-router-dom';
+import { Rnd } from 'react-rnd';
+import { Button, Modal } from 'react-bootstrap';
 
 const ADD_LOGO = gql`
-    mutation AddLogo(
-        $text: String!,
-        $color: String!,
-        $fontSize: Int!,
+    mutation addLogo(
+        $userId: String!
+        $name: String!,
+        $width: Int!,
+        $height: Int!,
         $backgroundColor: String!,
         $borderColor: String!,
         $borderRadius: Int!,
         $borderWidth: Int!,
-        $padding: Int!,
-        $margins: Int!) {
+        $textBoxes: [textBoxInput],
+        $imageBoxes: [imageBoxInput]) {
         addLogo(
-            text: $text,
-            color: $color,
-            fontSize: $fontSize,
+            userId: $userId,
+            name: $name,
+            width: $width,
+            height: $height,
             backgroundColor: $backgroundColor,
             borderColor: $borderColor,
             borderRadius: $borderRadius,
             borderWidth: $borderWidth,
-            padding: $padding,
-            margins: $margins),
+            textBoxes: $textBoxes,
+            imageBoxes: $imageBoxes),
              {
             _id
         }
@@ -38,16 +42,20 @@ class CreateLogoScreen extends Component {
         // initial state with default logo attributes 
 
         this.state = {
-            logoText : "goLogoLo Logo",
-            color : "#FF0000",
-            fontSize : 24,
+            userId: "5ebc3e37ffbda00ce3d1d399",
+            name: "goLogoLo Logo",
+            width: 500,
+            height: 500,
             backgroundColor : "#cccc44",
             borderColor: "#444444",
             borderRadius: 5,
             borderWidth: 2,
-            padding: 5,
-            margins: 10
-            //borderStyle: LogoDefaults.BORDER_STYLE
+            textBoxes: [],
+            imageBoxes: [],
+            x: 100,
+            y: 100,
+            showImgModal: false,
+            showTextModal: false
         };
 
         this.logo = null;
@@ -59,20 +67,26 @@ class CreateLogoScreen extends Component {
         return (val>=min && val<=max);
     }
 
-    printState = () => {
-        console.log(this.state.logoText);
-        console.log(this.state.color);
-        console.log(this.state.fontSize);
-        console.log(this.state.backgroundColor);
-        console.log(this.state.borderColor);
-        console.log(this.state.borderRadius);
-        console.log(this.state.borderWidth);
-        console.log(this.state.padding);
-        console.log(this.state.margins);
+    printState = () =>{
+
+    }
+
+    handleShowImgModal = () => {
+        this.setState({
+            showImgModal : !this.state.showImgModal
+        });
+    }
+
+    handleShowTextModal= () => {
+        this.setState({
+            showTextModal : !this.state.showTextModal
+        });
     }
 
     render() {
-        let text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margins;
+        let name, width, height, backgroundColor, borderColor, borderRadius, borderWidth, textBoxes, imageBoxes, imageURL;
+        console.log("imageBoxes:  " + this.state.imageBoxes.length);
+        console.log(...this.state.imageBoxes);
         return (
             <Mutation mutation={ADD_LOGO} onCompleted={() => this.props.history.push('/')}>
                 {(addLogo, { loading, error }) => (
@@ -108,34 +122,35 @@ class CreateLogoScreen extends Component {
                                                 <div className="card-body">
                                                     <form onSubmit={e => {
                                                         e.preventDefault();
-                                                        addLogo({ variables: { text: text.value, 
-                                                                            color: color.value, 
-                                                                            fontSize: parseInt(fontSize.value), 
+                                                        addLogo({ variables: { userId: this.state.userId,
+                                                                            name: name.value, 
+                                                                            width: parseInt(width.value), 
+                                                                            height: parseInt(height.value), 
                                                                             backgroundColor: backgroundColor.value,
                                                                             borderColor: borderColor.value,
                                                                             borderRadius:  parseInt(borderRadius.value),
                                                                             borderWidth: parseInt(borderWidth.value),
-                                                                            padding: parseInt(padding.value),
-                                                                            margins: parseInt(margins.value)
+                                                                            textBoxes: this.state.textBoxes,
+                                                                            imageBoxes: this.state.imageBoxes 
                                                                             } });
                                                     }}>
                                                         <div className="form-group">
-                                                            <label htmlFor="text">Name:</label>
-                                                            <input type="text" required={true} className="form-control" name="text" onChange={(e) => this.setState({logoText: e.target.value}, this.printState)} ref={node => {
-                                                                text = node;
-                                                            }} placeholder="Text" defaultValue={this.state.logoText}/>
+                                                            <label htmlFor="name">Name:</label>
+                                                            <input type="text" required={true} className="form-control" name="name" onChange={(e) => this.setState({name: e.target.value}, this.printState)} ref={node => {
+                                                                name = node;
+                                                            }} placeholder="Name" defaultValue={this.state.name}/>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label htmlFor="fontSize">Width:</label>
-                                                            <input type="number" required={true}  min="2" max="144" className="form-control" name="fontSize" onChange={(e) => {if (this.isWithinRange(e)) this.setState({fontSize: e.target.value}, this.printState);}} ref={node => {
-                                                                fontSize = node;
-                                                            }} placeholder="Font Size" defaultValue={this.state.fontSize}/>
+                                                            <label htmlFor="width">Width:</label>
+                                                            <input type="number" required={true}  min="2" max="500" className="form-control" name="width" onChange={(e) => {if (this.isWithinRange(e)) this.setState({width: e.target.value}, this.printState);}} ref={node => {
+                                                                width = node;
+                                                            }} placeholder="Width" defaultValue={this.state.width}/>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label htmlFor="fontSize">Height:</label>
-                                                            <input type="number" required={true}  min="2" max="144" className="form-control" name="fontSize" onChange={(e) => {if (this.isWithinRange(e)) this.setState({fontSize: e.target.value}, this.printState);}} ref={node => {
-                                                                fontSize = node;
-                                                            }} placeholder="Font Size" defaultValue={this.state.fontSize}/>
+                                                            <label htmlFor="height">Height:</label>
+                                                            <input type="number" required={true}  min="2" max="500" className="form-control" name="height" onChange={(e) => {if (this.isWithinRange(e)) this.setState({height: e.target.value}, this.printState);}} ref={node => {
+                                                                height = node;
+                                                            }} placeholder="Height" defaultValue={this.state.height}/>
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="backgroundColor">Background Color:</label>
@@ -164,10 +179,65 @@ class CreateLogoScreen extends Component {
                                                         <div className="container"> 
                                                             <div className="row">
                                                                 <div className="col-md-6 d-flex justify-content-center">
-                                                                    <button type="submit" className="btn btn-success">Insert Text</button>
+                                                                    <Button variant="primary" onClick={this.handleShowTextModal}>
+                                                                           Insert Text 
+                                                                    </Button>
+
+                                                                    <Modal show={this.state.showTextModal} onHide={this.handleShowTextModal}>
+                                                                        <Modal.Header closeButton>
+                                                                            <Modal.Title>Insert Text</Modal.Title>
+                                                                        </Modal.Header>
+                                                                        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                                                                        <Modal.Footer>
+                                                                            <Button variant="secondary" onClick={this.handleShowTextModal}>
+                                                                                Cancel
+                                                                            </Button>
+                                                                            <Button variant="primary" 
+                                                                                    onClick={() =>{
+                                                                                                    this.handleShowImgModal(); 
+                                                                                                    this.setState((prevState) => {
+                                                                                                        return {textBoxes: prevState.textBoxes.push({index: prevState.textBoxes.length ,text: "asdf", fontSize: 12, color: "#e31717", width: 30, height: 30, x: 0, y: 0})}})
+                                                                                                }}>
+                                                                                Enter 
+                                                                            </Button>
+                                                                        </Modal.Footer>
+                                                                    </Modal>
                                                                 </div>
+
                                                                 <div className="col-md-6 d-flex justify-content-center">
-                                                                    <button type="submit" className="btn btn-success" >Insert Image</button>
+                                                                    <Button variant="primary" onClick={this.handleShowImgModal}>
+                                                                           Insert Image 
+                                                                    </Button>
+
+                                                                    <Modal show={this.state.showImgModal} onHide={this.handleShowImgModal}>
+                                                                        <Modal.Header closeButton>
+                                                                            <Modal.Title>Insert Image</Modal.Title>
+                                                                        </Modal.Header>
+                                                                        <Modal.Body>
+                                                                            <div class="input-group mb-3">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="basic-addon1">Image URL</span>
+                                                                                </div>
+                                                                                <input type="text" class="form-control" placeHolder="http://example.com/image.jpg" aria-label="ImageURL" aria-describedby="basic-addon1" 
+                                                                                ref={node => {imageURL = node;}}/>
+                                                                            </div>
+                                                                        </Modal.Body>
+                                                                        <Modal.Footer>
+                                                                            <Button variant="secondary" onClick={this.handleShowImgModal}>
+                                                                                Cancel 
+                                                                            </Button>
+                                                                            <Button variant="primary" 
+                                                                                    onClick={() =>{
+                                                                                                    this.handleShowImgModal(); 
+                                                                                                    this.setState((prevState) => {
+                                                                                                        let newImageBoxArr = prevState.imageBoxes;
+                                                                                                        newImageBoxArr.push({index: prevState.imageBoxes.length ,url: imageURL.value, width: 30, height: 30, x: 0, y: 0});
+                                                                                                        return {imageBoxes: newImageBoxArr}})
+                                                                                                }}>
+                                                                            Enter 
+                                                                            </Button>
+                                                                        </Modal.Footer>
+                                                                    </Modal>
                                                                 </div>
                                                             </div>
                                                             
@@ -186,15 +256,71 @@ class CreateLogoScreen extends Component {
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="col-md-9" style={{overflow: "auto"}}>
-                                    <div style={{color: this.state.color, fontSize: this.state.fontSize+"pt", backgroundColor: this.state.backgroundColor,
+                                <div className="col-md-9 d-flex justify-content-center" style={{overflow: "auto"}}>
+                                    <div className="align-self-center" style={{display: "block", width: this.state.width+"px", height: this.state.height+"px", backgroundColor: this.state.backgroundColor,
                                                 borderColor: this.state.borderColor, borderRadius: this.state.borderRadius+"px", borderWidth: this.state.borderWidth+"px",
-                                                padding: this.state.padding+"px", margin: this.state.margins+"px", borderStyle: "solid", position: "absolute" }}>
-                                        <pre style={{color: this.state.color}}>{this.state.logoText}</pre>
+                                                borderStyle: "solid", position: "absolute" }}>
+
+                                    {
+                                        this.state.imageBoxes.map((item)=>(
+                                        <Rnd
+                                            size={{ width: item.width,  height: item.height }}
+                                            bounds="parent"
+                                            onDragStop={(e, d) => { 
+                                                this.setState(prevState => ({
+                                                    imageBoxes: prevState.imageBoxes.map((imageBox) => {
+                                                       if (imageBox.index !== item.index) return imageBox;
+                                                       return {
+                                                           ...imageBox,
+                                                           x: d.x,
+                                                           y: d.y
+                                                        }
+
+                                                    })
+                                                }))
+
+                                             }}
+                                            position={{ x: item.x, y: item.y }}
+                                            onResize={(e, direction, ref, delta, position) => {
+                                                this.setState(prevState => ({
+                                                    imageBoxes: prevState.imageBoxes.map((imageBox) => {
+                                                       if (imageBox.index !== item.index) return imageBox;
+                                                       return {
+                                                            ...imageBox,
+                                                            width: ref.style.width,
+                                                            height: ref.style.height,
+                                                            ...position
+                                                        }
+
+                                                    })
+                                                }))
+                                                this.setState({
+                                                width: ref.style.width,
+                                                height: ref.style.height,
+                                                ...position,
+                                                });
+                                            }}>
+                                            <img src={item.url} draggable="false" alt="Lamp" width={item.width} height={item.height}></img>
+                                        </Rnd>))
+                                    }
+
                                     </div>
                                 </div>
 
+                                <Rnd
+                                    size={{ width: 50,  height: 50 }}
+                                    position={{ x: this.state.x, y: this.state.y }}
+                                    onDragStop={(e, d) => { this.setState({ x: d.x, y: d.y }) }}
+                                    onResizeStop={(e, direction, ref, delta, position) => {
+                                        this.setState({
+                                        width: ref.style.width,
+                                        height: ref.style.height,
+                                        ...position,
+                                        });
+                                    }}
+                                    >
+                                   asdf;klasdfas 
+                                </Rnd>
                             </div>
                         </div>
                     </div>
