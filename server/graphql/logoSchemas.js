@@ -19,6 +19,9 @@ var textBoxType = new GraphQLObjectType({
             _id: {
                 type: GraphQLString
             },
+            layerIndex: {
+                type: GraphQLInt 
+            },
             text: {
                 type: GraphQLString
             },
@@ -28,11 +31,11 @@ var textBoxType = new GraphQLObjectType({
             color: {
                 type: GraphQLString
             },
-            width: {
-                type: GraphQLInt 
+            x: {
+                type: GraphQLInt
             },
-            height: {
-                type: GraphQLInt 
+            y: {
+                type: GraphQLInt
             }
         }
     }
@@ -44,6 +47,9 @@ var textBoxInput= new GraphQLInputObjectType({
         _id: {
             type: GraphQLString
         },
+        layerIndex: {
+            type: GraphQLInt 
+        },
         text: {
             type: GraphQLString
         },
@@ -53,11 +59,11 @@ var textBoxInput= new GraphQLInputObjectType({
         color: {
             type: GraphQLString
         },
-        width: {
-            type: GraphQLInt 
+        x: {
+            type: GraphQLInt
         },
-        height: {
-            type: GraphQLInt 
+        y: {
+            type: GraphQLInt
         }
     }
   });
@@ -69,6 +75,9 @@ var imageBoxType = new GraphQLObjectType({
             _id: {
                 type: GraphQLString
             },
+            layerIndex: {
+                type: GraphQLInt 
+            },
             url: {
                 type: GraphQLString
             },
@@ -77,6 +86,12 @@ var imageBoxType = new GraphQLObjectType({
             },
             height: {
                 type: GraphQLInt 
+            },
+            x: {
+                type: GraphQLInt
+            },
+            y: {
+                type: GraphQLInt
             }
         }
     }
@@ -88,6 +103,9 @@ var imageBoxInput= new GraphQLInputObjectType({
         _id: {
             type: GraphQLString
         },
+        layerIndex: {
+            type: GraphQLInt 
+        },
         url: {
             type: GraphQLString
         },
@@ -96,6 +114,12 @@ var imageBoxInput= new GraphQLInputObjectType({
         },
         height: {
             type: GraphQLInt 
+        },
+        x: {
+            type: GraphQLInt
+        },
+        y: {
+            type: GraphQLInt
         }
     }
   });

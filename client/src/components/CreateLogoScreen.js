@@ -55,7 +55,8 @@ class CreateLogoScreen extends Component {
             x: 100,
             y: 100,
             showImgModal: false,
-            showTextModal: false
+            showTextModal: false,
+            numLayers: 0 
         };
 
         this.logo = null;
@@ -84,7 +85,7 @@ class CreateLogoScreen extends Component {
     }
 
     render() {
-        let name, width, height, backgroundColor, borderColor, borderRadius, borderWidth, textBoxes, imageBoxes, imageURL;
+        let name, width, height, backgroundColor, borderColor, borderRadius, borderWidth, imageURL, text, fontSize, color;
         console.log("imageBoxes:  " + this.state.imageBoxes.length);
         console.log(...this.state.imageBoxes);
         return (
@@ -187,16 +188,43 @@ class CreateLogoScreen extends Component {
                                                                         <Modal.Header closeButton>
                                                                             <Modal.Title>Insert Text</Modal.Title>
                                                                         </Modal.Header>
-                                                                        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                                                                        <Modal.Body>
+                                                                            <div class="input-group mb-3">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="basic-addon1">Text</span>
+                                                                                </div>
+                                                                                <input type="text" class="form-control" placeHolder="Example Text" aria-label="TextBoxText" aria-describedby="basic-addon1" 
+                                                                                ref={node => {text = node;}}/>
+                                                                            </div>
+                                                                            <div className="input-group mb-3">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="basic-addon1">Font Size</span>
+                                                                                </div>
+                                                                                <input type="number" required={true} min="2" max="144" className="form-control" name="fontSize"  ref={node => {
+                                                                                    fontSize = node;
+                                                                                }} placeholder="Font Size" defaultValue="10" />
+                                                                            </div>
+                                                                            <div className="input-group mb-3">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="basic-addon1">Color</span>
+                                                                                </div>
+                                                                                <input type="color" required={true} className="form-control" name="color"  ref={node => {
+                                                                                    color = node;
+                                                                                }} placeholder="Color" defaultValue="#000000" />
+                                                                            </div>
+                                                                        </Modal.Body>
                                                                         <Modal.Footer>
                                                                             <Button variant="secondary" onClick={this.handleShowTextModal}>
                                                                                 Cancel
                                                                             </Button>
                                                                             <Button variant="primary" 
+
                                                                                     onClick={() =>{
-                                                                                                    this.handleShowImgModal(); 
+                                                                                                    this.handleShowTextModal(); 
                                                                                                     this.setState((prevState) => {
-                                                                                                        return {textBoxes: prevState.textBoxes.push({index: prevState.textBoxes.length ,text: "asdf", fontSize: 12, color: "#e31717", width: 30, height: 30, x: 0, y: 0})}})
+                                                                                                        let newTextBoxArr = prevState.textBoxes;
+                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value, fontSize: fontSize.value, color: color.value, x: 0, y: 0});
+                                                                                                        return {textBoxes: newTextBoxArr, numLayers: prevState.numLayers+1}})
                                                                                                 }}>
                                                                                 Enter 
                                                                             </Button>
@@ -231,8 +259,8 @@ class CreateLogoScreen extends Component {
                                                                                                     this.handleShowImgModal(); 
                                                                                                     this.setState((prevState) => {
                                                                                                         let newImageBoxArr = prevState.imageBoxes;
-                                                                                                        newImageBoxArr.push({index: prevState.imageBoxes.length ,url: imageURL.value, width: 30, height: 30, x: 0, y: 0});
-                                                                                                        return {imageBoxes: newImageBoxArr}})
+                                                                                                        newImageBoxArr.push({layerIndex: prevState.numLayers, url: imageURL.value, width: 30, height: 30, x: 0, y: 0});
+                                                                                                        return {imageBoxes: newImageBoxArr, numLayers: prevState.numLayers+1}})
                                                                                                 }}>
                                                                             Enter 
                                                                             </Button>
@@ -262,29 +290,40 @@ class CreateLogoScreen extends Component {
                                                 borderStyle: "solid", position: "absolute" }}>
 
                                     {
-                                        this.state.imageBoxes.map((item)=>(
+                                        (this.state.textBoxes.concat(this.state.imageBoxes)).sort((a, b) => {return a.layerIndex-b.layerIndex}).map((item)=>(
                                         <Rnd
-                                            size={{ width: item.width,  height: item.height }}
+                                            size={item.url!==undefined ? { width: item.width,  height: item.height } : {}}
+                                            enableResizing= {item.url!==undefined}
                                             bounds="parent"
                                             onDragStop={(e, d) => { 
-                                                this.setState(prevState => ({
-                                                    imageBoxes: prevState.imageBoxes.map((imageBox) => {
-                                                       if (imageBox.index !== item.index) return imageBox;
-                                                       return {
-                                                           ...imageBox,
-                                                           x: d.x,
-                                                           y: d.y
+                                                this.setState(prevState =>{ 
+                                                        return {
+                                                            imageBoxes: prevState.imageBoxes.map((imageBox) => 
+                                                                                                    {
+                                                                                                        if (imageBox.layerIndex !== item.layerIndex) return imageBox;
+                                                                                                        return {
+                                                                                                            ...imageBox,
+                                                                                                            x: d.x,
+                                                                                                            y: d.y
+                                                                                                        }
+                                                                                                    }),
+                                                            textBoxes: prevState.textBoxes.map((textBox) => 
+                                                                                                    {
+                                                                                                        if (textBox.layerIndex !== item.layerIndex) return textBox;
+                                                                                                        return {
+                                                                                                            ...textBox,
+                                                                                                            x: d.x,
+                                                                                                            y: d.y
+                                                                                                        }
+                                                                                                    })
                                                         }
-
-                                                    })
-                                                }))
-
+                                                })
                                              }}
                                             position={{ x: item.x, y: item.y }}
                                             onResize={(e, direction, ref, delta, position) => {
                                                 this.setState(prevState => ({
                                                     imageBoxes: prevState.imageBoxes.map((imageBox) => {
-                                                       if (imageBox.index !== item.index) return imageBox;
+                                                       if (imageBox.layerIndex !== item.layerIndex) return imageBox;
                                                        return {
                                                             ...imageBox,
                                                             width: ref.style.width,
@@ -292,15 +331,20 @@ class CreateLogoScreen extends Component {
                                                             ...position
                                                         }
 
+                                                    }),
+                                                    textBoxes: prevState.textBoxes.map((textBox) => {
+                                                       if (textBox.layerIndex !== item.layerIndex) return textBox;
+                                                       return {
+                                                            ...textBox,
+                                                            width: ref.style.width,
+                                                            height: ref.style.height,
+                                                            ...position
+                                                        }
+
                                                     })
                                                 }))
-                                                this.setState({
-                                                width: ref.style.width,
-                                                height: ref.style.height,
-                                                ...position,
-                                                });
                                             }}>
-                                            <img src={item.url} draggable="false" alt="Lamp" width={item.width} height={item.height}></img>
+                                            {item.url!==undefined ? <img src={item.url} draggable="false" alt="Image Error!" width={item.width} height={item.height}></img> : <div style={{color: item.color, fontSize: item.fontSize + "px"}}><pre>{item.text}</pre></div>}
                                         </Rnd>))
                                     }
 

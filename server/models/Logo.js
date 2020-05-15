@@ -2,18 +2,22 @@ var mongoose = require('mongoose');
 
 TextBoxSchema = new mongoose.Schema({
   id: String,
+  layerIndex: Number,
   text: String,
   fontSize: Number,
   color: String,
-  width: Number,
-  height: Number
+  x: Number,
+  y: Number
 });
 
 ImageBoxSchema = new mongoose.Schema({
   id: String,
+  layerIndex: Number,
   url: String,
   width: Number,
-  height: Number
+  height: Number,
+  x: Number,
+  y: Number
 });
 
 var LogoSchema = new mongoose.Schema({
