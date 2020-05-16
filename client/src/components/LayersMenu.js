@@ -5,8 +5,18 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const prepareList = list => list.map((e) => ({...e, id: `item-${e.layerIndex}`, content: `item ${e.layerIndex}`}));
 
 // a little function to help us with reordering the result
+/*
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+*/
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = list.concat([]);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
 
@@ -38,7 +48,7 @@ class LayersMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      layers: prepareList(this.props.textBoxes.concat(this.props.imageBoxes).sort((a,b)=>{return a.layerIndex - b.layerIndex}))
+      layers: prepareList(this.props.textBoxes.concat(this.props.imageBoxes).sort((a,b)=>{return b.layerIndex - a.layerIndex}))
     };
   }
 
@@ -47,20 +57,42 @@ class LayersMenu extends Component {
     if (!result.destination) {
       return;
     }
+
+    console.log("before:");
+    this.state.layers.forEach((item)=>{
+        console.log(item.url)
+    })
     const layers = reorder(
       this.state.layers,
       result.source.index,
       result.destination.index
     );
 
+    console.log("after:");
     layers.forEach((item)=>{
-        console.log(item.id)
+        console.log(item.url)
     })
 
     this.setState({
-        layers
+        layers: layers
     }, ()=>{this.props.updateLayers(layers)});
   }
+
+  componentDidUpdate = (prevProps) => {
+    console.log("\tLayersMenu component did update");
+    if (this.props.textBoxes!== prevProps.textBoxes || this.props.imageBoxes!==prevProps.imageBoxes){
+        this.setState({
+            layers: prepareList(this.props.textBoxes.concat(this.props.imageBoxes).sort((a,b)=>{return b.layerIndex - a.layerIndex}))
+        });
+    }
+}
+  componentDidMount= () => {
+    console.log("\tLayersMenu component did mount");
+    /*
+    this.setState({
+        layers: prepareList(this.props.textBoxes.concat(this.props.imageBoxes).sort((a,b)=>{return a.layerIndex - b.layerIndex}))
+    });*/
+}
 
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
@@ -74,7 +106,7 @@ class LayersMenu extends Component {
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              {this.state.layers.sort((a,b)=>(b.layerIndex-a.layerIndex)).map((item, index) => (
+              {this.state.layers.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div

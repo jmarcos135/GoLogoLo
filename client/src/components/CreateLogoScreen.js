@@ -87,11 +87,12 @@ class CreateLogoScreen extends Component {
     }
 
     updateLayers = (newLayers) => {
+        // newLayers is ordered from topmost layer to bottommost 
         // for each item in newLayers build a new textBoxes and imageBoxes arrays to reflect the change in layer order 
+
         let newTextBoxes = [];
         let newImageBoxes = [];
-        newLayers.forEach((item, index) => {
-            console.log(index)
+        newLayers.reverse().forEach((item, index) => {
             if(item.url!==undefined){
                 newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y});
             }
@@ -103,10 +104,11 @@ class CreateLogoScreen extends Component {
         this.setState({textBoxes: newTextBoxes, imageBoxes: newImageBoxes});
     }
 
+
     render() {
         let name, width, height, backgroundColor, borderColor, borderRadius, borderWidth, imageURL, text, fontSize, color;
         console.log("imageBoxes:  " + this.state.imageBoxes.length);
-        console.log(...this.state.imageBoxes);
+        console.log(...(this.state.imageBoxes.concat(this.state.textBoxes).sort((a,b)=>(a.layerIndex-b.layerIndex))));
         return (
             <Mutation mutation={ADD_LOGO} onCompleted={() => this.props.history.push('/')}>
                 {(addLogo, { loading, error }) => (
@@ -322,7 +324,7 @@ class CreateLogoScreen extends Component {
                                         (this.state.textBoxes.concat(this.state.imageBoxes)).sort((a, b) => {return a.layerIndex-b.layerIndex}).map((item)=>(
                                         <Rnd
                                             size={item.url!==undefined ? { width: item.width,  height: item.height } : {}}
-                                            enableResizing= {item.url!==undefined}
+                                            enableResizing={{ top:item.url!==undefined, right:item.url!==undefined , bottom:item.url!==undefined , left:item.url!==undefined , topRight:item.url!==undefined , bottomRight:item.url!==undefined , bottomLeft:item.url!==undefined , topLeft:item.url!==undefined }}
                                             bounds="parent"
                                             onDragStop={(e, d) => { 
                                                 this.setState(prevState =>{ 
@@ -373,7 +375,7 @@ class CreateLogoScreen extends Component {
                                                     })
                                                 }))
                                             }}>
-                                            {item.url!==undefined ? <img src={item.url} draggable="false" alt="Image Error!" width={item.width} height={item.height}></img> : <div style={{color: item.color, fontSize: item.fontSize + "px"}}><pre>{item.text}</pre></div>}
+                                            {item.url!==undefined ? <img src={item.url} draggable="false" alt="Image Error!" width={item.width} height={item.height}></img> : <div style={{color: item.color, fontSize: item.fontSize + "px", width: "min-content"}}><pre>{item.text}</pre></div>}
                                         </Rnd>))
                                     }
 
