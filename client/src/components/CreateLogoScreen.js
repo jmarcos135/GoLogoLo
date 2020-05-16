@@ -4,6 +4,7 @@ import { Mutation } from "react-apollo";
 import { Link } from 'react-router-dom';
 import { Rnd } from 'react-rnd';
 import { Button, Modal } from 'react-bootstrap';
+import LayersMenu from './LayersMenu.js';
 
 const ADD_LOGO = gql`
     mutation addLogo(
@@ -56,7 +57,8 @@ class CreateLogoScreen extends Component {
             y: 100,
             showImgModal: false,
             showTextModal: false,
-            numLayers: 0 
+            showToolsMenu: true,
+            numLayers: 0 ,
         };
 
         this.logo = null;
@@ -82,6 +84,23 @@ class CreateLogoScreen extends Component {
         this.setState({
             showTextModal : !this.state.showTextModal
         });
+    }
+
+    updateLayers = (newLayers) => {
+        // for each item in newLayers build a new textBoxes and imageBoxes arrays to reflect the change in layer order 
+        let newTextBoxes = [];
+        let newImageBoxes = [];
+        newLayers.forEach((item, index) => {
+            console.log(index)
+            if(item.url!==undefined){
+                newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y});
+            }
+            else{
+                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, x: item.x, y: item.y});
+            }
+        });
+
+        this.setState({textBoxes: newTextBoxes, imageBoxes: newImageBoxes});
     }
 
     render() {
@@ -110,7 +129,7 @@ class CreateLogoScreen extends Component {
                         </nav>
 
                         <div className="">
-                            <div className="row">
+                            <div className="row" style={{height: "100vh"}}>
                                 <div className="col-md-3">
                                     <div className="card card-default">
                                         <div className="card-body">
@@ -119,9 +138,17 @@ class CreateLogoScreen extends Component {
                                                     Create Logo
                                                 </h3>
                                             </div>
+                                            <ul class="nav nav-tabs" >
+                                                <li class="nav-item">
+                                                    <a class={this.state.showToolsMenu ? "nav-link active" : "nav-link"} href="#" onClick={() => {this.setState({showToolsMenu: true})}}>Tools</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class={this.state.showToolsMenu ? "nav-link" : "nav-link active"} href="#" onClick={() => {this.setState({showToolsMenu: false})}}>Layers</a>
+                                                </li>
+                                            </ul>
                                             <div className="card card-default bg-dark" style={{color: "#ffffff"}}>
-                                                <div className="card-body">
-                                                    <form onSubmit={e => {
+                                                <div className="card-body" >
+                                                    { this.state.showToolsMenu ? <form onSubmit={e => {
                                                         e.preventDefault();
                                                         addLogo({ variables: { userId: this.state.userId,
                                                                             name: name.value, 
@@ -276,7 +303,9 @@ class CreateLogoScreen extends Component {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </form>
+                                                    </form> : 
+                                                    <LayersMenu textBoxes={this.state.textBoxes} imageBoxes={this.state.imageBoxes} updateLayers={this.updateLayers}></LayersMenu>
+                                                  } 
                                                     {loading && <p>Loading...</p>}
                                                     {error && <p>Error :( Please try again</p>}
                                                 </div>
@@ -351,20 +380,6 @@ class CreateLogoScreen extends Component {
                                     </div>
                                 </div>
 
-                                <Rnd
-                                    size={{ width: 50,  height: 50 }}
-                                    position={{ x: this.state.x, y: this.state.y }}
-                                    onDragStop={(e, d) => { this.setState({ x: d.x, y: d.y }) }}
-                                    onResizeStop={(e, direction, ref, delta, position) => {
-                                        this.setState({
-                                        width: ref.style.width,
-                                        height: ref.style.height,
-                                        ...position,
-                                        });
-                                    }}
-                                    >
-                                   asdf;klasdfas 
-                                </Rnd>
                             </div>
                         </div>
                     </div>
