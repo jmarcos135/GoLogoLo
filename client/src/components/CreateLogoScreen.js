@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Rnd } from 'react-rnd';
 import { Button, Modal } from 'react-bootstrap';
 import LayersMenu from './LayersMenu.js';
+import ScaleText from "react-scale-text";
 
 const ADD_LOGO = gql`
     mutation addLogo(
@@ -97,12 +98,13 @@ class CreateLogoScreen extends Component {
                 newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y});
             }
             else{
-                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, x: item.x, y: item.y});
+                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, width: item.width, height: item.height, x: item.x, y: item.y});
             }
         });
 
         this.setState({textBoxes: newTextBoxes, imageBoxes: newImageBoxes});
     }
+
 
 
     render() {
@@ -227,14 +229,6 @@ class CreateLogoScreen extends Component {
                                                                             </div>
                                                                             <div className="input-group mb-3">
                                                                                 <div class="input-group-prepend">
-                                                                                    <span class="input-group-text" id="basic-addon1">Font Size</span>
-                                                                                </div>
-                                                                                <input type="number" required={true} min="2" max="144" className="form-control" name="fontSize"  ref={node => {
-                                                                                    fontSize = node;
-                                                                                }} placeholder="Font Size" defaultValue="10" />
-                                                                            </div>
-                                                                            <div className="input-group mb-3">
-                                                                                <div class="input-group-prepend">
                                                                                     <span class="input-group-text" id="basic-addon1">Color</span>
                                                                                 </div>
                                                                                 <input type="color" required={true} className="form-control" name="color"  ref={node => {
@@ -252,7 +246,7 @@ class CreateLogoScreen extends Component {
                                                                                                     this.handleShowTextModal(); 
                                                                                                     this.setState((prevState) => {
                                                                                                         let newTextBoxArr = prevState.textBoxes;
-                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value, fontSize: fontSize.value, color: color.value, x: 0, y: 0});
+                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value, fontSize: fontSize.value, color: color.value, width: 100, height: "auto", x: 0, y: 0});
                                                                                                         return {textBoxes: newTextBoxArr, numLayers: prevState.numLayers+1}})
                                                                                                 }}>
                                                                                 Enter 
@@ -323,9 +317,10 @@ class CreateLogoScreen extends Component {
                                     {
                                         (this.state.textBoxes.concat(this.state.imageBoxes)).sort((a, b) => {return a.layerIndex-b.layerIndex}).map((item)=>(
                                         <Rnd
-                                            size={item.url!==undefined ? { width: item.width,  height: item.height } : {}}
-                                            enableResizing={{ top:item.url!==undefined, right:item.url!==undefined , bottom:item.url!==undefined , left:item.url!==undefined , topRight:item.url!==undefined , bottomRight:item.url!==undefined , bottomLeft:item.url!==undefined , topLeft:item.url!==undefined }}
+                                            size={{width:item.width, height:item.height}}
+                                            enableResizing={{ top:true, right:true, bottom:true, left:true, topRight:true, bottomRight:true, bottomLeft:true, topLeft:true} } 
                                             bounds="parent"
+                                            style={{borderStyle:"solid"}}
                                             onDragStop={(e, d) => { 
                                                 this.setState(prevState =>{ 
                                                         return {
@@ -372,10 +367,11 @@ class CreateLogoScreen extends Component {
                                                             ...position
                                                         }
 
-                                                    })
-                                                }))
+                                                    }),
+                                                }), this.setState({}))
                                             }}>
-                                            {item.url!==undefined ? <img src={item.url} draggable="false" alt="Image Error!" width={item.width} height={item.height}></img> : <div style={{color: item.color, fontSize: item.fontSize + "px", width: "min-content"}}><pre>{item.text}</pre></div>}
+                                            {item.url!==undefined ? (<img src={item.url} draggable="false" alt="Image Error!" height={item.height+"px"} width={item.width+"px"}></img>) 
+                                            : (<div style={{overflow:"hidden", width:"100%", height:"100%"}}><ScaleText widthOnly={true}><p >{item.text}</p></ScaleText></div>)}
                                         </Rnd>))
                                     }
 
