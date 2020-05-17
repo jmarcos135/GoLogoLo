@@ -98,7 +98,7 @@ class CreateLogoScreen extends Component {
                 newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y});
             }
             else{
-                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, width: item.width, height: item.height, x: item.x, y: item.y});
+                newTextBoxes.push({layerIndex: index, text: item.text, color: item.color, width: item.width, height: item.height, x: item.x, y: item.y});
             }
         });
 
@@ -134,7 +134,7 @@ class CreateLogoScreen extends Component {
 
                         <div className="">
                             <div className="row" style={{height: "100vh"}}>
-                                <div className="col-md-3">
+                                <div className="col-md-4 col-lg-3">
                                     <div className="card card-default">
                                         <div className="card-body">
                                             <div className="card-heading">
@@ -246,7 +246,7 @@ class CreateLogoScreen extends Component {
                                                                                                     this.handleShowTextModal(); 
                                                                                                     this.setState((prevState) => {
                                                                                                         let newTextBoxArr = prevState.textBoxes;
-                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value, fontSize: fontSize.value, color: color.value, width: 100, height: "auto", x: 0, y: 0});
+                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value,  color: color.value, width: 35, height: "auto", x: 0, y: 0});
                                                                                                         return {textBoxes: newTextBoxArr, numLayers: prevState.numLayers+1}})
                                                                                                 }}>
                                                                                 Enter 
@@ -309,7 +309,7 @@ class CreateLogoScreen extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-9 d-flex justify-content-center" style={{overflow: "auto"}}>
+                                <div className=" col-md-8 col-lg-9 d-flex justify-content-center" style={{overflow: "auto"}}>
                                     <div className="align-self-center" style={{display: "block", width: this.state.width+"px", height: this.state.height+"px", backgroundColor: this.state.backgroundColor,
                                                 borderColor: this.state.borderColor, borderRadius: this.state.borderRadius+"px", borderWidth: this.state.borderWidth+"px",
                                                 borderStyle: "solid", position: "absolute" }}>

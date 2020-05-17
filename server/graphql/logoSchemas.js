@@ -25,11 +25,14 @@ var textBoxType = new GraphQLObjectType({
             text: {
                 type: GraphQLString
             },
-            fontSize: {
-                type: GraphQLInt 
-            },
             color: {
                 type: GraphQLString
+            },
+            width: {
+                type: GraphQLInt
+            },
+            height: {
+                type: GraphQLInt
             },
             x: {
                 type: GraphQLInt
@@ -53,11 +56,14 @@ var textBoxInput= new GraphQLInputObjectType({
         text: {
             type: GraphQLString
         },
-        fontSize: {
-            type: GraphQLInt 
-        },
         color: {
             type: GraphQLString
+        },
+        width: {
+            type: GraphQLInt
+        },
+        height: {
+            type: GraphQLInt
         },
         x: {
             type: GraphQLInt
