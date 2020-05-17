@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { Rnd } from 'react-rnd';
 import { Button, Modal } from 'react-bootstrap';
 import LayersMenu from './LayersMenu.js';
-import ScaleText from "react-scale-text";
 
 const ADD_LOGO = gql`
     mutation addLogo(
@@ -98,7 +97,7 @@ class CreateLogoScreen extends Component {
                 newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y});
             }
             else{
-                newTextBoxes.push({layerIndex: index, text: item.text, color: item.color, width: item.width, height: item.height, x: item.x, y: item.y});
+                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, x: item.x, y: item.y});
             }
         });
 
@@ -229,6 +228,14 @@ class CreateLogoScreen extends Component {
                                                                             </div>
                                                                             <div className="input-group mb-3">
                                                                                 <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="basic-addon1">Font Size</span>
+                                                                                </div>
+                                                                                <input type="number" required={true} min="2" max="144" className="form-control" name="fontSize"  ref={node => {
+                                                                                    fontSize = node;
+                                                                                }} placeholder="Font Size" defaultValue="10" />
+                                                                            </div>
+                                                                            <div className="input-group mb-3">
+                                                                                <div class="input-group-prepend">
                                                                                     <span class="input-group-text" id="basic-addon1">Color</span>
                                                                                 </div>
                                                                                 <input type="color" required={true} className="form-control" name="color"  ref={node => {
@@ -246,7 +253,7 @@ class CreateLogoScreen extends Component {
                                                                                                     this.handleShowTextModal(); 
                                                                                                     this.setState((prevState) => {
                                                                                                         let newTextBoxArr = prevState.textBoxes;
-                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value,  color: color.value, width: 35, height: "auto", x: 0, y: 0});
+                                                                                                        newTextBoxArr.push({layerIndex: prevState.numLayers, text: text.value, fontSize: parseInt(fontSize.value), color: color.value, x: 0, y: 0});
                                                                                                         return {textBoxes: newTextBoxArr, numLayers: prevState.numLayers+1}})
                                                                                                 }}>
                                                                                 Enter 
@@ -317,8 +324,11 @@ class CreateLogoScreen extends Component {
                                     {
                                         (this.state.textBoxes.concat(this.state.imageBoxes)).sort((a, b) => {return a.layerIndex-b.layerIndex}).map((item)=>(
                                         <Rnd
-                                            size={{width:item.width, height:item.height}}
-                                            enableResizing={{ top:true, right:true, bottom:true, left:true, topRight:true, bottomRight:true, bottomLeft:true, topLeft:true} } 
+                                            size={item.url!==undefined ? {width:item.width, height:item.height} : {width:"auto", height:"auto"}}
+                                            maxWidth={this.state.width}
+                                            maxHeight={this.state.height}
+                                            enableResizing={item.url!==undefined ? { top:true, right:true, bottom:true, left:true, topRight:true, bottomRight:true, bottomLeft:true, topLeft:true}:
+                                                                                    { top:false, right:false, bottom:false, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false} } 
                                             bounds="parent"
                                             style={{borderStyle:"solid"}}
                                             onDragStop={(e, d) => { 
@@ -352,18 +362,8 @@ class CreateLogoScreen extends Component {
                                                        if (imageBox.layerIndex !== item.layerIndex) return imageBox;
                                                        return {
                                                             ...imageBox,
-                                                            width: ref.style.width,
-                                                            height: ref.style.height,
-                                                            ...position
-                                                        }
-
-                                                    }),
-                                                    textBoxes: prevState.textBoxes.map((textBox) => {
-                                                       if (textBox.layerIndex !== item.layerIndex) return textBox;
-                                                       return {
-                                                            ...textBox,
-                                                            width: ref.style.width,
-                                                            height: ref.style.height,
+                                                            width: parseInt(ref.style.width.replace(/\D/g,'')),
+                                                            height: parseInt(ref.style.height.replace(/\D/g,'')),
                                                             ...position
                                                         }
 
@@ -371,7 +371,7 @@ class CreateLogoScreen extends Component {
                                                 }), this.setState({}))
                                             }}>
                                             {item.url!==undefined ? (<img src={item.url} draggable="false" alt="Image Error!" height={item.height+"px"} width={item.width+"px"}></img>) 
-                                            : (<div style={{overflow:"hidden", width:"100%", height:"100%"}}><ScaleText widthOnly={true}><p >{item.text}</p></ScaleText></div>)}
+                                            : (<div style={{overflow:"hidden", width:"auto", height:"auto", maxWidth:this.state.width.value+"px", maxHeight: this.state.height.value+"px"}}><pre style={{fontSize:item.fontSize+"px", color: item.color,  overflow:"hidden"}}>{item.text}</pre></div>)}
                                         </Rnd>))
                                     }
 

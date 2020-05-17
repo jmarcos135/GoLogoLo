@@ -96,7 +96,7 @@ handleShowEditModal = () =>{
 }
 
   render() {
-    let imageURL, text, color;
+    let imageURL, text, fontSize, color;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         {this.state.editItem!==null && this.state.editItem!==undefined ? 
@@ -124,6 +124,14 @@ handleShowEditModal = () =>{
                     </div>
                     <div className="input-group mb-3">
                         <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Font Size</span>
+                        </div>
+                        <input type="number" required={true} min="2" max="144" className="form-control" name="fontSize"  ref={node => {
+                            fontSize = node;
+                        }} placeholder="Font Size" defaultValue={this.state.editItem.fontSize} />
+                    </div>
+                    <div className="input-group mb-3">
+                        <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Color</span>
                         </div>
                         <input type="color" required={true} className="form-control" name="color"  ref={node => {
@@ -147,7 +155,7 @@ handleShowEditModal = () =>{
                                                 return {...item, url: imageURL.value}
                                               }
                                               else{
-                                                return {...item, text: text.value, color: color.value}
+                                                return {...item, text: text.value, fontSize: parseInt(fontSize.value), color: color.value}
                                               }
                                             }
                                           });
