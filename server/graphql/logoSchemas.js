@@ -226,19 +226,36 @@ var queryType = new GraphQLObjectType({
                 }
             },
             logo: {
-                type: logoType,
+                type: userType,
                 args: {
-                    id: {
+                    userId: {
+                        name: '_id',
+                        type: GraphQLString
+                    },
+                    logoId: {
                         name: '_id',
                         type: GraphQLString
                     }
                 },
                 resolve: function (root, params) {
-                    const logoDetails = LogoModel.findById(params.id).exec()
-                    if (!logoDetails) {
-                        throw new Error('Error')
-                    }
-                    return logoDetails
+                    /*
+                    return UserModel.findOne({
+                        'createdAt': {
+                          $gte: new Date()
+                        },
+                        user_list: {$elemMatch: {id: 'b', some_flag: 1}} // will only be true if a unique item of the array fulfill both of the conditions.
+                      }).sort({
+                        createdAt: 1
+                      }
+                      */
+                     
+                     /*
+                    return UserModel.findOne(
+                        {_id: params.userId, "logos._id": params.logoId},
+                        {'logos.$': 1});
+                        */
+                    return UserModel.findOne(
+                        {_id: params.userId},{logos: {$elemMatch: {_id: params.logoId}}});
                 }
             }
         }

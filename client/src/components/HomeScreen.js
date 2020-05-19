@@ -60,7 +60,7 @@ class HomeScreen extends Component {
                                             </div>
                                             <ul class="navbar-nav ml-auto flex-nowrap">
                                                 <li class="nav-item">
-                                                    <Link className="btn btn-success" id="add_logo_button" to="/create"><i class="fas fa-cloud"></i>New Logo</Link>
+                                                    <Link className="btn btn-success" id="add_logo_button" to="/create"><i class="fa fa-pencil"></i> New Logo</Link>
                                                 </li>
                                             </ul>
                                         </nav>
