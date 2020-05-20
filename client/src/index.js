@@ -7,6 +7,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import * as serviceWorker from './serviceWorker';
 
 // THESE ARE OUR REACT SCREENS, WHICH WE WILL ROUTE HERE
+import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import EditLogoScreen from './components/EditLogoScreen';
 import CreateLogoScreen from './components/CreateLogoScreen';
@@ -18,7 +19,8 @@ ReactDOM.render(
     <ApolloProvider client={client}>
         <Router>
             <div>
-                <Route exact path='/' component={HomeScreen} />
+                <Route exact path='/users/:userId' component={HomeScreen} />
+                <Route exact path='/login' component={LoginScreen} />
                 <Route path='/edit/:id' component={EditLogoScreen} />
                 <Route path='/create' component={CreateLogoScreen} />
                 <Route path='/view/:id' component={ViewLogoScreen} />

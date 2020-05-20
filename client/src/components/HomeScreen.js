@@ -6,25 +6,25 @@ import { Query } from 'react-apollo';
 
 
 const GET_LOGOS = gql`
-{
-    user(id:"5ebc3e37ffbda00ce3d1d399") {
-      _id
-      email
-      password
-      logos{
-        _id
-        name
-        lastUpdate
-      }
+    query user($userId: String) {
+        user(id: $userId) {
+            _id
+            email
+            password
+            logos{
+                _id
+                name
+                lastUpdate
+            }
+        }
     }
-}
 `;
 
 class HomeScreen extends Component {
 
     render() {
         return (
-            <Query pollInterval={500} query={GET_LOGOS}>
+            <Query pollInterval={500} query={GET_LOGOS} variables={{ userId: this.props.match.params.userId}}>
                 {({ loading, error, data, refetch }) => {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;

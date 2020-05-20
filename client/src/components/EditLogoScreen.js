@@ -167,7 +167,8 @@ class EditLogoScreen extends Component {
             borderRadius: this.logo.borderRadius,
             borderWidth: this.logo.borderWidth, 
             textBoxes: this.logo.textBoxes,
-            imageBoxes: this.logo.imageBoxes
+            imageBoxes: this.logo.imageBoxes,
+            numLayers: this.logo.imageBoxes.length + this.logo.textBoxes.length
         });
     }
 
