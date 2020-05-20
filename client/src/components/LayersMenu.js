@@ -85,10 +85,6 @@ class LayersMenu extends Component {
 }
   componentDidMount= () => {
     console.log("\tLayersMenu component did mount");
-    /*
-    this.setState({
-        layers: prepareList(this.props.textBoxes.concat(this.props.imageBoxes).sort((a,b)=>{return a.layerIndex - b.layerIndex}))
-    });*/
 }
 
 handleShowEditModal = () =>{
@@ -185,7 +181,10 @@ handleShowEditModal = () =>{
                         provided.draggableProps.style
                       )}
                     >
-                      <div className="container" > 
+                      <div className="container" 
+                        onMouseOver = {() => {this.props.setFocusOnLayer(item.layerIndex);}} 
+                        onMouseLeave = {()=>{this.props.unsetFocusOnLayer(item.layerIndex);}}
+                      > 
                         <div className="row" style={{overflowWrap:"normal"}}>
                           <div className="col-md-8" style={{verticalAlign: "middle", overflow:"hidden", overflowWrap:"normal", whiteSpace: "nowrap", textOverflow: "ellipsis",display:"block"}}>
                             {item.url!==undefined ? "Img: " + item.url : "Text: " + item.text}
@@ -196,7 +195,7 @@ handleShowEditModal = () =>{
                                   this.setState({editItem: item}, this.handleShowEditModal);
                                 }}
                               >
-                               Edit 
+                              <i class="fa fa-pencil"></i> 
                             </Button>
                           </div>
                           <div className="col-md-2 ">
@@ -205,7 +204,7 @@ handleShowEditModal = () =>{
                                   this.deleteLayer(item.layerIndex);
                                 }}
                               >
-                                delete
+                               <i class="fa fa-trash"></i> 
                             </Button>
                           </div>
                         </div>

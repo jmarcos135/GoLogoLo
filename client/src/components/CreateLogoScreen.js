@@ -58,7 +58,7 @@ class CreateLogoScreen extends Component {
             showImgModal: false,
             showTextModal: false,
             showToolsMenu: true,
-            numLayers: 0 ,
+            numLayers: 0
         };
 
         this.logo = null;
@@ -87,22 +87,41 @@ class CreateLogoScreen extends Component {
     }
 
     updateLayers = (newLayers) => {
-        // newLayers is ordered from topmost layer to bottommost 
+        // newLayers MUST be ordered from topmost layer to bottommost 
         // for each item in newLayers build a new textBoxes and imageBoxes arrays to reflect the change in layer order 
 
         let newTextBoxes = [];
         let newImageBoxes = [];
         newLayers.reverse().forEach((item, index) => {
             if(item.url!==undefined){
-                newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y});
+                newImageBoxes.push({layerIndex: index, url: item.url, width: item.width, height: item.height, x: item.x, y: item.y, focus: item.focus});
             }
             else{
-                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, x: item.x, y: item.y});
+                newTextBoxes.push({layerIndex: index, text: item.text, fontSize: item.fontSize, color: item.color, x: item.x, y: item.y, focus: item.focus});
             }
         });
 
         this.setState({textBoxes: newTextBoxes, imageBoxes: newImageBoxes});
     }
+
+    setFocusOnLayer = (layerIndex) => {
+        let newLayers = this.state.textBoxes.concat(this.state.imageBoxes).sort((a,b)=>{return b.layerIndex-a.layerIndex}).map((e)=>{
+          if (layerIndex!==e.layerIndex){
+            return e
+          }
+          else{
+            return {...e, focus: true}
+          }
+        });
+        this.updateLayers(newLayers);
+      }
+    
+      unsetFocusOnLayer = (layerIndex) => {
+        let newLayers = this.state.textBoxes.concat(this.state.imageBoxes).sort((a,b)=>{return b.layerIndex-a.layerIndex}).map((e)=>{
+            return {...e, focus: false}
+        });
+        this.updateLayers(newLayers);
+      }
 
 
 
@@ -146,7 +165,7 @@ class CreateLogoScreen extends Component {
                                                     <a class={this.state.showToolsMenu ? "nav-link active" : "nav-link"} href="#" onClick={() => {this.setState({showToolsMenu: true})}}>Tools</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class={this.state.showToolsMenu ? "nav-link" : "nav-link active"} href="#" onClick={() => {this.setState({showToolsMenu: false})}}>Layers</a>
+                                                    <a class={this.state.showToolsMenu ? (this.state.numLayers==0 ? "nav-link disabled": "nav-link") : "nav-link active" } href="#" onClick={() => {this.setState({showToolsMenu: false})}}>Layers</a>
                                                 </li>
                                             </ul>
                                             <div className="card card-default bg-dark" style={{color: "#ffffff"}}>
@@ -161,8 +180,8 @@ class CreateLogoScreen extends Component {
                                                                             borderColor: borderColor.value,
                                                                             borderRadius:  parseInt(borderRadius.value),
                                                                             borderWidth: parseInt(borderWidth.value),
-                                                                            textBoxes: this.state.textBoxes,
-                                                                            imageBoxes: this.state.imageBoxes 
+                                                                            textBoxes: this.state.textBoxes.map((e)=> ({layerIndex: e.layerIndex, text: e.text, fontSize: e.fontSize, color: e.color, x: e.x, y: e.y})),
+                                                                            imageBoxes: this.state.imageBoxes.map((e)=> ({layerIndex: e.layerIndex, url: e.url, width: e.width, height: e.height, x: e.x, y: e.y})) 
                                                                             } });
                                                     }}>
                                                         <div className="form-group">
@@ -307,7 +326,11 @@ class CreateLogoScreen extends Component {
                                                             </div>
                                                         </div>
                                                     </form> : 
-                                                    <LayersMenu textBoxes={this.state.textBoxes} imageBoxes={this.state.imageBoxes} updateLayers={this.updateLayers}></LayersMenu>
+                                                    <LayersMenu textBoxes={this.state.textBoxes} 
+                                                                imageBoxes={this.state.imageBoxes} 
+                                                                updateLayers={this.updateLayers}
+                                                                setFocusOnLayer={this.setFocusOnLayer}
+                                                                unsetFocusOnLayer={this.unsetFocusOnLayer}></LayersMenu>
                                                   } 
                                                     {loading && <p>Loading...</p>}
                                                     {error && <p>Error :( Please try again</p>}
@@ -330,7 +353,7 @@ class CreateLogoScreen extends Component {
                                             enableResizing={item.url!==undefined ? { top:true, right:true, bottom:true, left:true, topRight:true, bottomRight:true, bottomLeft:true, topLeft:true}:
                                                                                     { top:false, right:false, bottom:false, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false} } 
                                             bounds="parent"
-                                            style={{borderStyle:"solid"}}
+                                            style={{outline: item.focus ? "solid #0645AD" : "none"}}
                                             onDragStop={(e, d) => { 
                                                 this.setState(prevState =>{ 
                                                         return {
@@ -370,8 +393,8 @@ class CreateLogoScreen extends Component {
                                                     }),
                                                 }), this.setState({}))
                                             }}>
-                                            {item.url!==undefined ? (<img src={item.url} draggable="false" alt="Image Error!" height={item.height+"px"} width={item.width+"px"}></img>) 
-                                            : (<div style={{overflow:"hidden", width:"auto", height:"auto", maxWidth:this.state.width.value+"px", maxHeight: this.state.height.value+"px"}}><pre style={{fontSize:item.fontSize+"px", color: item.color,  overflow:"hidden"}}>{item.text}</pre></div>)}
+                                            {item.url!==undefined ? (<img src={item.url} draggable="false" alt="Image Error!" height={item.height+"px"} width={item.width+"px"} onMouseOver= {() => {this.setFocusOnLayer(item.layerIndex);}} onMouseLeave = {()=>{this.unsetFocusOnLayer(item.layerIndex);}}></img>) 
+                                            : (<div onMouseOver= {() => {this.setFocusOnLayer(item.layerIndex);}} onMouseLeave = {()=>{this.unsetFocusOnLayer(item.layerIndex);}} style={{overflow:"hidden", width:"auto", height:"auto", maxWidth:this.state.width.value+"px", maxHeight: this.state.height.value+"px"}}><pre style={{fontSize:item.fontSize+"px", color: item.color,  overflow:"hidden"}}>{item.text}</pre></div>)}
                                         </Rnd>))
                                     }
 
