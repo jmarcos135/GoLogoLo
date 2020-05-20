@@ -94,6 +94,8 @@ handleShowEditModal = () =>{
   render() {
     let imageURL, text, fontSize, color;
     return (
+      <div>
+        Drag/Drop to reorder layers<br/>
       <DragDropContext onDragEnd={this.onDragEnd}>
         {this.state.editItem!==null && this.state.editItem!==undefined ? 
           <Modal show={this.state.showEditModal} onHide={this.handleShowEditModal}>
@@ -217,7 +219,7 @@ handleShowEditModal = () =>{
             </div>
           )}
         </Droppable>
-      </DragDropContext>
+      </DragDropContext></div>
     );
   }
 }

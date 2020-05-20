@@ -162,10 +162,10 @@ class CreateLogoScreen extends Component {
                                             </div>
                                             <ul class="nav nav-tabs" >
                                                 <li class="nav-item">
-                                                    <a class={this.state.showToolsMenu ? "nav-link active" : "nav-link"} href="#" onClick={() => {this.setState({showToolsMenu: true})}}>Tools</a>
+                                                    <a class={this.state.showToolsMenu ? "nav-link active bg-dark text-white" : "nav-link"} href="#" onClick={() => {this.setState({showToolsMenu: true})}}>Tools</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class={this.state.showToolsMenu ? (this.state.numLayers==0 ? "nav-link disabled": "nav-link") : "nav-link active" } href="#" onClick={() => {this.setState({showToolsMenu: false})}}>Layers</a>
+                                                    <a class={this.state.showToolsMenu ? (this.state.numLayers==0 ? "nav-link disabled": "nav-link") : "nav-link active bg-dark text-white" } href="#" onClick={() => {this.setState({showToolsMenu: false})}}>Layers</a>
                                                 </li>
                                             </ul>
                                             <div className="card card-default bg-dark" style={{color: "#ffffff"}}>
