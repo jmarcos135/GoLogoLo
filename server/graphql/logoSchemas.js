@@ -209,11 +209,47 @@ var queryType = new GraphQLObjectType({
                     return users 
                 }
             },
+            guestUser: {
+                type: userType,
+                args:{
+                    email: {
+                        name: "email",
+                        type: GraphQLString
+                    },
+                    password: {
+                        name: "password",
+                        type: GraphQLString
+                    }
+                },
+                resolve: function (root, params) {
+                    /*
+                    const user = UserModel.findOne({email: "guest"});
+                    if (user==null) {
+                        console.log("not found")
+                        const userModel = new UserModel(params);
+                        const newUser = userModel.save();
+
+                        return newUser
+                        //throw new Error('Error')
+                    }
+
+                    return user
+                    */
+                   /*
+                   return UserModel.update(
+                    {"email": "guest"},
+                    { $setOnInsert: { "password": "guest"} },
+                    { upsert: true }
+                    )
+                    */
+                   return UserModel.findOneAndUpdate({"email": "guest"}, {"email": "guest", "password": "password"}, {upsert: true, 'new': true})
+                }
+            },
             user: {
                 type: userType,
                 args:{
                     id: {
-                        name: '_id',
+                        name: "_id",
                         type: GraphQLString
                     }
                 },

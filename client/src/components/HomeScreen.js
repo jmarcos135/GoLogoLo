@@ -35,7 +35,7 @@ class HomeScreen extends Component {
                         <div className="">
                             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-                                <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                                <Link to={`/users/${this.props.match.params.userId}`}><a class="navbar-brand" href="#">GoLogoLo</a></Link>
                                 <div class="collapse navbar-collapse" id="navbarText">
                                     <ul class="navbar-nav mr-auto">
                                     </ul>
@@ -43,7 +43,7 @@ class HomeScreen extends Component {
 
                                         <ul class="navbar-nav mr-auto">
                                             <li class="nav-item">
-                                                <a class="nav-link" href="#">Logout</a>
+                                                <Link to="/"><a class="navbar-link" href="#">Logout</a></Link>
                                             </li>
                                         </ul>
                                     </span>
@@ -60,7 +60,7 @@ class HomeScreen extends Component {
                                             </div>
                                             <ul class="navbar-nav ml-auto flex-nowrap">
                                                 <li class="nav-item">
-                                                    <Link className="btn btn-success" id="add_logo_button" to="/create"><i class="fa fa-pencil"></i> New Logo</Link>
+                                                    <Link className="btn btn-success" id="add_logo_button" to={`/users/${this.props.match.params.userId}/create`}><i class="fa fa-pencil"></i> New Logo</Link>
                                                 </li>
                                             </ul>
                                         </nav>
@@ -73,7 +73,7 @@ class HomeScreen extends Component {
                                         {data.user.logos.length==0 ? <h6><br></br>You currently have no logos</h6> : 
                                             data.user.logos.sort((a, b) => { return Date.parse(b.lastUpdate)-Date.parse(a.lastUpdate)}).map((logo, index) => (
                                                 <li key={index} className='home_logo_link list-group-item'>
-                                                    <Link to={`/view/${logo._id}`}>{logo.name}</Link>
+                                                    <Link to={`/users/${this.props.match.params.userId}/view/${logo._id}`}>{logo.name}</Link>
                                                 </li>
                                             ))}
                                         </ul>

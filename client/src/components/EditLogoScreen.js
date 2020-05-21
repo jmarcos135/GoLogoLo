@@ -180,7 +180,7 @@ class EditLogoScreen extends Component {
     render() {
         let name, width, height, backgroundColor, borderColor, borderRadius, borderWidth, imageURL, text, fontSize, color;
         return (
-            <Query  query={GET_LOGO} variables={{ userId: "5ebc3e37ffbda00ce3d1d399", logoId: this.props.match.params.id }} >
+            <Query  query={GET_LOGO} variables={{ userId: this.props.match.params.userId, logoId: this.props.match.params.id }} >
                 {({ loading, error, data}) => {
                     if (loading) return 'Loading...';
                     if (error) {console.log("ERROR! " + error.message); return `Error! ${error.message}`};
@@ -188,12 +188,12 @@ class EditLogoScreen extends Component {
                     console.log("EditLogoScreen rendering");
                     this.logo = data.logo.logos[0];
                     return (
-                        <Mutation mutation={UPDATE_LOGO} key={this.logo._id} onCompleted={() => this.props.history.push(`/`)}>
+                        <Mutation mutation={UPDATE_LOGO} key={this.logo._id} onCompleted={() => this.props.history.push(`/users/${this.props.match.params.userId}`)}>
                             {(updateLogo, { loading, error }) => (
                                 <div className="">
                         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-                            <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                            <Link to={`/users/${this.props.match.params.userId}`}><a class="navbar-brand" href="#">GoLogoLo</a></Link>
                             <div class="collapse navbar-collapse" id="navbarText">
                                 <ul class="navbar-nav mr-auto">
                                 </ul>
@@ -201,7 +201,7 @@ class EditLogoScreen extends Component {
 
                                     <ul class="navbar-nav mr-auto">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="#">Logout</a>
+                                            <Link to="/"><a class="navbar-link" href="#">Logout</a></Link>
                                         </li>
                                     </ul>
                                 </span>
@@ -230,7 +230,7 @@ class EditLogoScreen extends Component {
                                                 <div className="card-body" >
                                                     { this.state.showToolsMenu ? <form onSubmit={e => {
                                                         e.preventDefault();
-                                                        updateLogo({ variables: { userId: this.state.userId,
+                                                        updateLogo({ variables: { userId: this.props.match.params.userId,
                                                                             logoId: this.logo._id,
                                                                             name: name.value, 
                                                                             width: parseInt(width.value), 

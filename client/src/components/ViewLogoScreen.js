@@ -134,7 +134,7 @@ class ViewLogoScreen extends Component {
 
         console.log("ViewLogoScreen rendering");
         return (
-            <Query pollInterval={500} query={GET_LOGO} variables={{ userId: "5ebc3e37ffbda00ce3d1d399", logoId: this.props.match.params.id }}>
+            <Query pollInterval={500} query={GET_LOGO} variables={{ userId: this.props.match.params.userId, logoId: this.props.match.params.id }}>
                 {({ loading, error, data, refetch }) => {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;
@@ -145,7 +145,7 @@ class ViewLogoScreen extends Component {
                     return (
                         <div className="">
                             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                                <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                                <Link to={`/users/${this.props.match.params.userId}`}><a class="navbar-brand" href="#">GoLogoLo</a></Link>
                                 <div class="collapse navbar-collapse" id="navbarText">
                                     <ul class="navbar-nav mr-auto">
                                     </ul>
@@ -153,7 +153,7 @@ class ViewLogoScreen extends Component {
 
                                         <ul class="navbar-nav mr-auto">
                                             <li class="nav-item">
-                                                <a class="nav-link" href="#">Logout</a>
+                                                <Link to="/"><a class="navbar-link" href="#">Logout</a></Link>
                                             </li>
                                         </ul>
                                     </span>
@@ -188,20 +188,20 @@ class ViewLogoScreen extends Component {
                                                         <dt>Last Updated:</dt>
                                                         <dd>{new Date(logo.lastUpdate).toString()}</dd>
 
-                                                        <Mutation mutation={DELETE_LOGO} key={logo._id} onCompleted={() => this.props.history.push('/')}>
+                                                        <Mutation mutation={DELETE_LOGO} key={logo._id} onCompleted={() => this.props.history.push(`/users/${this.props.match.params.userId}`)}>
                                                             {(removeLogo, { loading, error }) => (
                                                                 <div>
                                                                     <form
                                                                         onSubmit={e => {
                                                                             e.preventDefault();
-                                                                            removeLogo({ variables: { userId:"5ebc3e37ffbda00ce3d1d399", logoId: logo._id } });
+                                                                            removeLogo({ variables: { userId: this.props.match.params.userId, logoId: logo._id } });
                                                                         }}>
                                                                     <button type="button" className="btn btn-light" style={{marginRight: "4px"}}
                                                                         onClick = {()=>{this.handleDownloadImage(logoNode, logo.name)}}
                                                                     >
                                                                         <i class="fa fa-download"></i>
                                                                     </button>
-                                                                    <Link to={`/edit/${logo._id}`} className="btn btn-success"><i class="fa fa-pencil"></i> Edit</Link>&nbsp;
+                                                                    <Link to={`/users/${this.props.match.params.userId}/edit/${logo._id}`} className="btn btn-success"><i class="fa fa-pencil"></i> Edit</Link>&nbsp;
                                                                     <button type="submit" className="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
                                                                     </form>
                                                                     {loading && <p>Loading...</p>}

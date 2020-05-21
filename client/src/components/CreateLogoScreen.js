@@ -130,12 +130,12 @@ class CreateLogoScreen extends Component {
         console.log("imageBoxes:  " + this.state.imageBoxes.length);
         console.log(...(this.state.imageBoxes.concat(this.state.textBoxes).sort((a,b)=>(a.layerIndex-b.layerIndex))));
         return (
-            <Mutation mutation={ADD_LOGO} onCompleted={() => this.props.history.push('/')}>
+            <Mutation mutation={ADD_LOGO} onCompleted={() => this.props.history.push(`/users/${this.props.match.params.userId}`)}>
                 {(addLogo, { loading, error }) => (
                     <div className="">
                         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-                            <Link to="/"><a class="navbar-brand" href="#">GoLogoLo</a></Link>
+                            <Link to={`/users/${this.props.match.params.userId}`}><a class="navbar-brand" href="#">GoLogoLo</a></Link>
                             <div class="collapse navbar-collapse" id="navbarText">
                                 <ul class="navbar-nav mr-auto">
                                 </ul>
@@ -143,7 +143,7 @@ class CreateLogoScreen extends Component {
 
                                     <ul class="navbar-nav mr-auto">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="#">Logout</a>
+                                            <Link to="/"><a class="navbar-link" href="#">Logout</a></Link>
                                         </li>
                                     </ul>
                                 </span>
@@ -172,7 +172,7 @@ class CreateLogoScreen extends Component {
                                                 <div className="card-body" >
                                                     { this.state.showToolsMenu ? <form onSubmit={e => {
                                                         e.preventDefault();
-                                                        addLogo({ variables: { userId: this.state.userId,
+                                                        addLogo({ variables: { userId: this.props.match.params.userId,
                                                                             name: name.value, 
                                                                             width: parseInt(width.value), 
                                                                             height: parseInt(height.value), 
